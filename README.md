@@ -4,7 +4,7 @@ My portfolio — a scroll-driven walk through an open flower garden as evening
 falls. Six projects bloom along the path, the sky shifts from golden hour to
 twilight as you scroll, and the fireflies come out near the end.
 
-**Live:** [add live URL here]
+**Live:** https://vijayay836.github.io/Portfolio/
 
 ---
 
