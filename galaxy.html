@@ -94,6 +94,35 @@ a{ color:inherit; text-decoration:none; }
 }
 .brand{ font-family:var(--f-display); font-style:italic; font-size:1.35rem; letter-spacing:-.01em; pointer-events:auto; color:var(--starlight); }
 .brand b{ font-style:normal; font-weight:600; }
+.back-btn{
+    pointer-events:auto;
+    position:absolute;
+    top:72px;
+    right:var(--gut);
+
+    font-family:var(--f-mono);
+    font-size:.72rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+
+    color:var(--starlight);
+    padding:.6rem 1rem;
+
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:999px;
+
+    background:rgba(12,17,48,.55);
+    backdrop-filter:blur(10px);
+
+    transition:.3s;
+}
+
+.back-btn:hover{
+    color:var(--cyan);
+    border-color:var(--cyan);
+    box-shadow:0 0 18px rgba(85,214,230,.35);
+    transform:translateY(-2px);
+}
 .index{ font-family:var(--f-mono); font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); pointer-events:auto; display:flex; gap:1.4rem; }
 .index a{ position:relative; opacity:.8; transition:opacity .3s, color .3s; }
 .index a:hover{ opacity:1; color:var(--cyan); }
@@ -167,7 +196,7 @@ a{ color:inherit; text-decoration:none; }
 .galaxy .core{ transform-box:fill-box; transform-origin:center; }
 
 .scroll-cue{ position:absolute; left:50%; bottom:30px; transform:translateX(-50%); font-family:var(--f-mono); font-size:.64rem; letter-spacing:.3em; text-transform:uppercase; color:var(--cyan); display:flex; flex-direction:column; align-items:center; gap:.7rem; z-index:4; }
-.scroll-cue .stalk{ width:1px; height:42px; background:linear-gradient(var(--cyan),transparent); }
+.scroll-cue .stalk{ width:1px; height:-3px; background:linear-gradient(var(--cyan),transparent); }
 
 /* ============================================================
    ORIGIN / manifesto
@@ -353,6 +382,7 @@ a{ color:inherit; text-decoration:none; }
 <!-- =============================== CHROME =============================== -->
 <div class="chrome" id="chrome">
   <div class="top">
+    <a href="index.html" class="back-btn">← Back</a>
     <a class="brand" href="#top"><b>Vijaya Yeditha</b> · atlas</a>
     <nav class="top-links" aria-label="quick links">
       <a href="https://github.com/VijayaY836" data-link target="_blank" rel="noopener">GitHub</a>
@@ -408,11 +438,11 @@ a{ color:inherit; text-decoration:none; }
       <span class="line-mask"><span class="line-inner"><span class="r1" data-split>A cosmos</span></span></span>
       <span class="line-mask"><span class="line-inner"><span class="r2" data-split>of <em>things</em> built.</span></span></span>
     </h1>
-    <p class="hero-sub rise" data-hero>I'm <b>Vijaya Yeditha</b>, a full-stack &amp; creative developer who charts each project like a celestial body: found in the dark, brought to light, and logged with its own coordinates.</p>
+    <p class="hero-sub rise" data-hero>I'm <b>Vijaya</b>, a full-stack &amp; creative developer who charts each project like a celestial body: found in the dark, brought to light, and logged with its own coordinates.</p>
     <div class="hero-meta">
       <div class="m rise" data-hero><b>20+</b>objects charted</div>
       <div class="m rise" data-hero><b>Full-stack</b>&amp; cinematic web</div>
-      <div class="m rise" data-hero><b>BVRIT HYD</b>College of Engg. for Women · CSE</div>
+      <div class="m rise" data-hero><b>BVRIT HYDERABAD College of Engineering for Women · CSE</div>
     </div>
   </div>
 
@@ -647,7 +677,6 @@ a{ color:inherit; text-decoration:none; }
   <div class="wrap">
     <p class="eyebrow rise" data-reveal>Field 05 — transmission</p>
     <h2 class="display rise" data-reveal>Let's chart<br>something <em>together.</em></h2>
-    <a class="mailto rise" data-reveal href="mailto:vijayayeditha564@gmail.com" data-link>vijayayeditha564@gmail.com</a>
     <div class="socials rise" data-reveal>
       <a href="https://github.com/VijayaY836" data-link target="_blank" rel="noopener">GitHub</a>
       <a href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" data-link target="_blank" rel="noopener">LinkedIn</a>

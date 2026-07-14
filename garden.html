@@ -40,6 +40,7 @@
   ::selection{background:#FFB13D;color:#2E1F35}
 
   /* ---------- fixed atmosphere (back to front) ---------- */
+  
   .sky{
     position:fixed;inset:0;z-index:-9;
     background:linear-gradient(to bottom,var(--sky-top) 0%,var(--sky-mid) 46%,var(--sky-hor) 100%);
@@ -101,6 +102,33 @@
     .top-links{gap:1rem;font-size:.6rem;top:4.4rem}
     .top-links a{font-size:.64rem}
     }
+    .back-btn{
+  position: fixed;
+  top: 3rem;
+  right: 1.6rem;
+  left: auto;
+  z-index: 1000;
+
+  color: var(--cream);
+  text-decoration: none;
+  font-family: 'Karla', sans-serif;
+  font-size: .95rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+
+  padding: .5rem .8rem;
+  border: 1px solid rgba(255,246,232,.25);
+  border-radius: 999px;
+  background: rgba(20,27,60,.18);
+  backdrop-filter: blur(8px);
+
+  transition: .25s;
+}
+
+.back-btn:hover{
+  background: rgba(255,246,232,.15);
+  transform: translateX(-3px);
+}
 
   /* ---------- hero ---------- */
   .hero{
@@ -327,6 +355,7 @@
 
   <a class="wordmark" href="#top">Vijaya</a>
   <div class="clock" id="clock" aria-hidden="true">5:47 PM</div>
+  <a href="index.html" class="back-btn">← Back</a>
 
 <nav class="top-links" aria-label="quick links">
   <a href="https://github.com/VijayaY836" target="_blank" rel="noopener">GitHub</a>
