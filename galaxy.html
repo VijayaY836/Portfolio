@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vijaya Yeditha — A Stellar Atlas</title>
+<meta name="description" content="The observation log of Vijaya Yeditha: a full-stack & creative developer. Every project charted as a celestial object in a personal star atlas." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..600&family=Instrument+Sans:ital,wght@0,400..600;1,400..500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS  —  "Deep Field"
+   Rich indigo-black cosmos (never flat black), starlight text,
+   and a colorful nebula palette: magenta, cyan, violet, star-gold.
+   ============================================================ */
+:root{
+  --void:      #070A19;   /* deep space */
+  --void-2:    #0C1130;   /* panel / lifted */
+  --void-3:    #131A44;   /* card */
+  --starlight: #EBEDFA;   /* text */
+  --dim:       #A7ADD4;   /* muted text */
+  --dimmer:    #6E76A6;
+
+  --magenta:   #F05C9C;   /* nebula rose */
+  --cyan:      #55D6E6;   /* stellar cyan */
+  --violet:    #9C7CFF;   /* cosmic violet */
+  --gold:      #F3C46B;   /* warm star */
+
+  --flare:     #FFF6E2;   /* supernova light */
+
+  --maxw: 1240px;
+  --gut: clamp(20px, 5vw, 80px);
+  --sp: clamp(90px, 14vh, 190px);
+
+  --f-display: "Fraunces", Georgia, serif;
+  --f-body: "Instrument Sans", system-ui, sans-serif;
+  --f-mono: "Space Mono", ui-monospace, monospace;
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+body{
+  font-family:var(--f-body);
+  background:var(--void);
+  color:var(--starlight);
+  overflow-x:hidden;
+  line-height:1.5;
+  cursor:none;
+}
+/* subtle ambient nebula wash behind everything */
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(60vw 60vw at 12% 8%, rgba(156,124,255,.16), transparent 60%),
+    radial-gradient(55vw 55vw at 88% 30%, rgba(240,92,156,.13), transparent 60%),
+    radial-gradient(70vw 70vw at 70% 92%, rgba(85,214,230,.10), transparent 62%);
+}
+@media (pointer:coarse){ body{ cursor:auto; } }
+
+html.lenis, html.lenis body { height:auto; }
+.lenis.lenis-smooth { scroll-behavior:auto !important; }
+
+::selection{ background:var(--magenta); color:var(--void); }
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+
+.eyebrow{
+  font-family:var(--f-mono); font-size:.72rem; letter-spacing:.28em;
+  text-transform:uppercase; color:var(--cyan);
+  display:inline-flex; align-items:center; gap:.7em;
+}
+.eyebrow::before{ content:""; width:26px; height:1px; background:var(--gold); display:inline-block; }
+.display{ font-family:var(--f-display); font-weight:340; line-height:.98; letter-spacing:-.015em; font-optical-sizing:auto; }
+
+.wrap{ width:100%; max-width:var(--maxw); margin-inline:auto; padding-inline:var(--gut); }
+.band{ padding-block:var(--sp); position:relative; z-index:3; }
+
+.rise{ opacity:0; transform:translateY(28px); }
+.char{ display:inline-block; will-change:transform; }
+.line-mask{ overflow:hidden; display:block; }
+.line-inner{ display:block; will-change:transform; }
+
+/* ============================================================
+   FIXED CHROME
+   ============================================================ */
+.chrome{ position:fixed; inset:0; z-index:40; pointer-events:none; }
+.chrome .top{
+  position:absolute; top:0; left:0; right:0;
+  display:flex; justify-content:space-between; align-items:baseline;
+  padding:26px var(--gut);
+}
+.brand{ font-family:var(--f-display); font-style:italic; font-size:1.35rem; letter-spacing:-.01em; pointer-events:auto; color:var(--starlight); }
+.brand b{ font-style:normal; font-weight:600; }
+.index{ font-family:var(--f-mono); font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); pointer-events:auto; display:flex; gap:1.4rem; }
+.index a{ position:relative; opacity:.8; transition:opacity .3s, color .3s; }
+.index a:hover{ opacity:1; color:var(--cyan); }
+.index a::after{ content:""; position:absolute; left:0; bottom:-4px; width:0; height:1px; background:var(--cyan); transition:width .35s ease; }
+.index a:hover::after{ width:100%; }
+@media (max-width:720px){ .index{ display:none; } }
+
+.top-links{ font-family:var(--f-mono); font-size:.7rem; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); pointer-events:auto; display:flex; gap:1.4rem; }
+.top-links a{ position:relative; opacity:.8; transition:opacity .3s, color .3s; }
+.top-links a:hover{ opacity:1; color:var(--cyan); }
+.top-links a::after{ content:""; position:absolute; left:0; bottom:-4px; width:0; height:1px; background:var(--cyan); transition:width .35s ease; }
+.top-links a:hover::after{ width:100%; }
+@media (max-width:820px){ .top-links{ display:none; } }
+
+/* invert chrome to dark-on-light while the supernova flare is bright */
+.chrome.flare .brand,
+.chrome.flare .brand b,
+.chrome.flare .index a,
+.chrome.flare .top-links a,
+.chrome.flare .cat-readout{ color:#20140A; }
+
+.cat-readout{
+  position:absolute; left:var(--gut); bottom:22px;
+  font-family:var(--f-mono); font-size:.68rem; letter-spacing:.14em; color:var(--dim);
+  pointer-events:none; display:flex; gap:.6em; align-items:center;
+}
+.cat-readout .bar{ width:64px; height:2px; background:rgba(235,237,250,.16); position:relative; overflow:hidden; }
+.cat-readout .bar i{ position:absolute; inset:0 100% 0 0; background:linear-gradient(90deg,var(--cyan),var(--magenta)); }
+@media (max-width:720px){ .cat-readout{ display:none; } }
+
+/* constellation spine (drawn by scroll) */
+.spine{ position:fixed; top:0; left:30px; height:100vh; width:70px; z-index:38; pointer-events:none; }
+@media (max-width:900px){ .spine{ left:8px; width:44px; } }
+@media (max-width:560px){ .spine{ display:none; } }
+.spine path.line{ fill:none; stroke:rgba(156,124,255,.55); stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round; }
+.spine .star{ transform-box:fill-box; transform-origin:center; opacity:0; }
+.spine .star .halo{ opacity:.5; }
+
+.cursor{
+  position:fixed; top:0; left:0; z-index:60; width:12px; height:12px; margin:-6px 0 0 -6px;
+  border-radius:50%; background:var(--cyan);
+  box-shadow:0 0 12px 3px rgba(85,214,230,.7);
+  pointer-events:none; transition:width .28s, height .28s, margin .28s, background .28s, box-shadow .28s;
+  will-change:transform;
+}
+.cursor.grow{ width:46px; height:46px; margin:-23px 0 0 -23px; background:rgba(240,92,156,.14); box-shadow:0 0 26px 4px rgba(240,92,156,.35); }
+.cursor.dark{ background:#20140A; box-shadow:0 0 12px 3px rgba(32,20,10,.4); }
+@media (pointer:coarse){ .cursor{ display:none; } }
+
+#stardust{ position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero{ min-height:100svh; position:relative; z-index:3; display:flex; flex-direction:column; justify-content:center; padding-top:14vh; padding-bottom:9vh; overflow:hidden; }
+.hero .wrap{ position:relative; z-index:3; display:flex; flex-direction:column; align-items:flex-start; text-align:left; max-width:none; margin-inline:0; }
+.hero-eyebrow{ margin-bottom:2.2rem; }
+.hero h1{ font-size:clamp(3.4rem, 12.5vw, 12rem); margin:0; }
+.hero h1 .r2{ padding-left:.09em; }
+.hero h1 em{ font-style:italic; background:linear-gradient(100deg,var(--magenta),var(--violet) 45%,var(--cyan)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-sub{ margin-top:2.4rem; max-width:44ch; font-size:clamp(1.02rem,1.5vw,1.28rem); color:var(--dim); line-height:1.55; }
+.hero-sub b{ color:var(--starlight); font-weight:600; }
+.hero-meta{ margin-top:3.2rem; display:flex; flex-wrap:wrap; justify-content:flex-start; gap:2.4rem 3rem; align-items:center; }
+.hero-meta .m{ font-family:var(--f-mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--cyan); text-align:left; }
+.hero-meta .m b{ display:block; font-family:var(--f-display); font-style:normal; font-weight:340; font-size:1.9rem; letter-spacing:-.01em; color:var(--starlight); text-transform:none; margin-bottom:.15rem; }
+@media (max-width:720px){ .hero .wrap{ align-items:center; text-align:center; } .hero-meta{ justify-content:center; } }
+
+/* galaxy centerpiece — sits to the right, opposite the text */
+.galaxy{ position:absolute; right:-4vw; top:50%; transform:translateY(-50%); width:min(58vw, 740px); aspect-ratio:1; z-index:1; pointer-events:none; opacity:.9; }
+@media (max-width:900px){ .galaxy{ right:-26vw; width:100vw; opacity:.5; top:64%; } }
+.galaxy .core{ transform-box:fill-box; transform-origin:center; }
+
+.scroll-cue{ position:absolute; left:50%; bottom:30px; transform:translateX(-50%); font-family:var(--f-mono); font-size:.64rem; letter-spacing:.3em; text-transform:uppercase; color:var(--cyan); display:flex; flex-direction:column; align-items:center; gap:.7rem; z-index:4; }
+.scroll-cue .stalk{ width:1px; height:42px; background:linear-gradient(var(--cyan),transparent); }
+
+/* ============================================================
+   ORIGIN / manifesto
+   ============================================================ */
+.manifesto .wrap{ max-width:1000px; }
+.intro-box{ position:relative; overflow:hidden; border:1px solid rgba(156,124,255,.24); border-radius:18px; padding:clamp(30px,4.5vw,54px) clamp(30px,4.5vw,54px) clamp(30px,4.5vw,54px) clamp(34px,5vw,58px); background:linear-gradient(165deg, rgba(19,26,68,.45), rgba(12,17,48,.2)); }
+.intro-box::before{ content:""; position:absolute; left:0; top:0; bottom:0; width:3px; background:linear-gradient(180deg,var(--magenta),var(--violet),var(--cyan)); }
+.log-tag{ display:inline-flex; align-items:center; gap:.6em; font-family:var(--f-mono); font-size:.68rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; }
+.log-tag i{ width:6px; height:6px; border-radius:50%; background:var(--gold); box-shadow:0 0 8px var(--gold); display:inline-block; }
+.intro-box .big{ margin:0; }
+.manifesto .big{ font-size:clamp(1.9rem, 4.6vw, 3.8rem); line-height:1.16; font-family:var(--f-display); font-weight:340; letter-spacing:-.015em; color:var(--dim); }
+.manifesto .big b{ color:var(--starlight); font-weight:340; }
+.manifesto .big em{ font-style:italic; color:var(--magenta); }
+.manifesto .grid{ margin-top:5.5rem; display:grid; grid-template-columns:repeat(3,1fr); gap:2.6rem; }
+@media (max-width:820px){ .manifesto .grid{ grid-template-columns:1fr; gap:2rem; } }
+.manifesto .grid h4{ font-family:var(--f-mono); font-size:.72rem; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:.9rem; }
+.manifesto .grid p{ color:var(--dim); font-size:1rem; line-height:1.6; }
+
+/* ============================================================
+   SUPERNOVA interlude (pinned, dark -> blinding -> dark)
+   ============================================================ */
+.nova{ position:relative; z-index:5; height:100vh; min-height:640px; display:flex; align-items:center; justify-content:center; overflow:hidden; background:var(--void); }
+.nova .burst{ position:absolute; left:50%; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:var(--flare); box-shadow:0 0 0 0 rgba(255,246,226,.9); }
+.nova .ring{ position:absolute; left:50%; top:50%; border-radius:50%; border:1px solid rgba(255,246,226,.5); transform:translate(-50%,-50%) scale(0); }
+.nova .verse{ position:relative; z-index:3; text-align:center; max-width:22ch; font-family:var(--f-display); font-weight:320; font-size:clamp(2rem,6vw,4.6rem); line-height:1.08; letter-spacing:-.02em; opacity:0; color:var(--starlight); }
+.nova .verse em{ font-style:italic; color:var(--gold); }
+.nova .verse-sub{ margin-top:1.8rem; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; opacity:0; color:var(--dim); }
+
+/* ============================================================
+   THE ATLAS (horizontal object gallery)
+   ============================================================ */
+.atlas{ position:relative; z-index:5; }
+.atlas .head{ padding:var(--sp) var(--gut) 3rem; max-width:var(--maxw); margin-inline:auto; }
+.atlas .head h2{ font-size:clamp(2.4rem,6.5vw,5.4rem); margin-top:1.4rem; }
+.atlas .head p{ margin-top:1.4rem; max-width:52ch; color:var(--dim); }
+
+.gallery{ position:relative; }
+.gallery-track{ display:flex; gap:36px; padding:10px var(--gut) var(--sp); will-change:transform; }
+.object{
+  position:relative; flex:0 0 clamp(300px, 42vw, 500px);
+  background:linear-gradient(180deg, rgba(19,26,68,.9), rgba(12,17,48,.9));
+  border:1px solid rgba(156,124,255,.22);
+  border-radius:14px; padding:34px 34px 30px;
+  display:flex; flex-direction:column; min-height:clamp(460px, 64vh, 620px);
+  overflow:hidden; transition:box-shadow .5s ease, transform .5s cubic-bezier(.2,.7,.2,1), border-color .5s;
+}
+.object::after{ content:""; position:absolute; inset:0; border-radius:14px; pointer-events:none;
+  background:radial-gradient(120% 60% at 100% 0, rgba(240,92,156,.10), transparent 55%); }
+.object:hover{ box-shadow:0 30px 80px -30px rgba(85,214,230,.35), 0 0 0 1px rgba(85,214,230,.25) inset; border-color:rgba(85,214,230,.5); }
+.obj-top{ display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:2; }
+.obj-no{ font-family:var(--f-mono); font-size:.7rem; letter-spacing:.16em; color:var(--cyan); }
+.obj-tag{ font-family:var(--f-mono); font-size:.62rem; letter-spacing:.14em; text-transform:uppercase; color:var(--void); background:linear-gradient(90deg,var(--cyan),var(--violet)); padding:.35em .7em; border-radius:20px; }
+.obj-illu{ height:120px; margin:22px 0 10px; display:flex; align-items:center; justify-content:center; position:relative; z-index:2; }
+.obj-illu svg{ height:100%; }
+.obj-coord{ font-family:var(--f-mono); font-size:.64rem; letter-spacing:.08em; color:var(--dimmer); position:relative; z-index:2; }
+.obj-desig{ font-family:var(--f-display); font-style:italic; font-size:1.05rem; color:var(--gold); margin-top:.5rem; position:relative; z-index:2; }
+.obj-name{ font-family:var(--f-display); font-weight:360; font-size:clamp(1.7rem,2.6vw,2.4rem); line-height:1.02; letter-spacing:-.02em; margin:.15rem 0 .8rem; position:relative; z-index:2; }
+.obj-desc{ color:var(--dim); font-size:.96rem; line-height:1.55; position:relative; z-index:2; flex:1; }
+.obj-foot{ margin-top:1.4rem; display:flex; flex-wrap:wrap; gap:.5rem; position:relative; z-index:2; align-items:center; }
+.chip{ font-family:var(--f-mono); font-size:.62rem; letter-spacing:.06em; color:var(--cyan); border:1px solid rgba(85,214,230,.3); padding:.32em .6em; border-radius:20px; }
+.obj-link{ margin-left:auto; font-family:var(--f-mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--magenta); display:inline-flex; align-items:center; gap:.4em; pointer-events:auto; }
+.obj-link .arw{ transition:transform .3s; }
+.obj-link:hover .arw{ transform:translateX(4px); }
+
+@media (max-width:860px){
+  .gallery-track{ flex-direction:column; align-items:stretch; gap:24px; }
+  .object{ flex:1 1 auto; width:100%; min-height:auto; }
+}
+
+/* minor bodies grid */
+.minor{ position:relative; z-index:5; }
+.minor .grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:rgba(156,124,255,.18); border:1px solid rgba(156,124,255,.18); border-radius:12px; overflow:hidden; }
+@media (max-width:820px){ .minor .grid{ grid-template-columns:1fr; } }
+.minor .cell{ background:var(--void-2); padding:30px 28px; transition:background .4s; }
+.minor .cell:hover{ background:var(--void-3); }
+.minor .cell .n{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.14em; color:var(--gold); }
+.minor .cell h5{ font-family:var(--f-display); font-weight:380; font-size:1.35rem; margin:.5rem 0 .5rem; letter-spacing:-.01em; }
+.minor .cell p{ color:var(--dim); font-size:.9rem; line-height:1.5; }
+
+/* ============================================================
+   REGISTERED PHENOMENA (patents)
+   ============================================================ */
+.patents{ position:relative; z-index:5; }
+.patents h2{ font-size:clamp(2.2rem,6vw,4.6rem); max-width:18ch; }
+.patents .lede{ margin-top:1.6rem; max-width:52ch; color:var(--dim); font-size:1.05rem; }
+.patent-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:36px; margin-top:3.4rem; }
+@media (max-width:820px){ .patent-grid{ grid-template-columns:1fr; } }
+.patent-card{ min-height:auto; }
+.patent-card .obj-name{ font-size:clamp(1.3rem,2vw,1.6rem); line-height:1.18; }
+.patent-status{ font-family:var(--f-mono); font-size:.66rem; letter-spacing:.14em; text-transform:uppercase; color:var(--dimmer); margin-left:auto; position:relative; z-index:2; }
+
+/* ============================================================
+   SIGNALS (interests)
+   ============================================================ */
+.signals{ position:relative; z-index:5; }
+.signals h2{ font-size:clamp(2.2rem,6vw,4.6rem); max-width:16ch; }
+.signals .lede{ margin-top:1.6rem; max-width:50ch; color:var(--dim); font-size:1.05rem; }
+
+.signal-grid{
+  margin-top:3.8rem; display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+  background:rgba(156,124,255,.16); border:1px solid rgba(156,124,255,.16); border-radius:16px; overflow:hidden;
+}
+@media (max-width:900px){ .signal-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .signal-grid{ grid-template-columns:1fr; } }
+
+.signal-card{ position:relative; background:var(--void-2); padding:2.6rem 2.2rem; overflow:hidden; transition:background .45s ease; }
+.signal-card:hover{ background:var(--void-3); }
+.signal-card:nth-child(1){ --accent:var(--cyan); }
+.signal-card:nth-child(2){ --accent:var(--magenta); }
+.signal-card:nth-child(3){ --accent:var(--violet); }
+.signal-card:nth-child(4){ --accent:var(--gold); }
+.signal-card:nth-child(5){ --accent:var(--cyan); }
+.signal-card:nth-child(6){ --accent:var(--magenta); }
+.signal-card::before{ content:""; position:absolute; top:0; left:0; right:0; height:2px; background:var(--accent); transform:scaleX(0); transform-origin:left; transition:transform .55s ease; }
+.signal-card:hover::before{ transform:scaleX(1); }
+.signal-idx{ font-family:var(--f-display); font-style:italic; font-weight:300; font-size:2.6rem; line-height:1; color:var(--accent); opacity:.35; margin-bottom:1.1rem; transition:opacity .45s ease, transform .45s ease; }
+.signal-card:hover .signal-idx{ opacity:1; transform:translateY(-2px); }
+.signal-card h3{ font-family:var(--f-display); font-weight:360; font-size:1.5rem; letter-spacing:-.015em; line-height:1.22; margin-bottom:.9rem; }
+.signal-card h3 em{ font-style:italic; color:var(--accent); transition:color .45s ease; }
+.signal-card p{ color:var(--dim); font-size:.92rem; line-height:1.6; max-width:30ch; transition:color .45s ease; }
+.signal-card:hover p{ color:var(--starlight); }
+
+/* ============================================================
+   INSTRUMENTS (categorized skill console)
+   ============================================================ */
+.instruments{ position:relative; z-index:5; padding-block:var(--sp); }
+.instruments .wrap{ margin-bottom:0; }
+.instruments h2{ font-size:clamp(2rem,5vw,3.6rem); }
+.instruments .sub{ margin-top:1rem; color:var(--dim); max-width:46ch; }
+
+.console{ margin-top:3.6rem; display:grid; grid-template-columns:repeat(4,1fr); gap:2.6rem 2.4rem; }
+@media (max-width:980px){ .console{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:560px){ .console{ grid-template-columns:1fr; gap:2.2rem; } }
+
+.console .cat.c-cyan{ --accent:var(--cyan); }
+.console .cat.c-magenta{ --accent:var(--magenta); }
+.console .cat.c-violet{ --accent:var(--violet); }
+.console .cat.c-gold{ --accent:var(--gold); }
+
+.cat-label{
+  display:flex; align-items:center; gap:.65em;
+  font-family:var(--f-mono); font-size:.7rem; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:1.2rem; padding-bottom:.9rem;
+  border-bottom:1px solid rgba(156,124,255,.18);
+}
+.cat-label i{ width:6px; height:6px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent); flex:none; }
+
+.skill-chips{ display:flex; flex-wrap:wrap; gap:.55rem; }
+.skill-chip{
+  font-family:var(--f-mono); font-size:.72rem; letter-spacing:.03em; color:var(--starlight);
+  border:1px solid rgba(167,173,212,.28); background:rgba(235,237,250,.03);
+  padding:.44em .9em; border-radius:20px; line-height:1.3;
+  transition:border-color .3s ease, background .3s ease, transform .3s ease;
+}
+.skill-chip:hover{ border-color:var(--accent); background:rgba(235,237,250,.06); transform:translateY(-2px); }
+
+/* ============================================================
+   TRANSMISSION (contact)
+   ============================================================ */
+.contact{ position:relative; z-index:5; overflow:hidden; padding-block:clamp(110px,16vh,200px); border-top:1px solid rgba(156,124,255,.18); }
+.contact .glow{ position:absolute; left:50%; top:-10%; width:90vw; height:90vw; transform:translateX(-50%); background:radial-gradient(circle, rgba(156,124,255,.2), rgba(240,92,156,.08) 40%, transparent 62%); pointer-events:none; }
+.contact .wrap{ position:relative; z-index:2; text-align:center; }
+.contact h2{ font-size:clamp(2.6rem,9vw,7.5rem); margin:1.8rem 0; }
+.contact h2 em{ font-style:italic; background:linear-gradient(100deg,var(--magenta),var(--gold)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.contact .mailto{ display:inline-flex; align-items:center; gap:.7em; pointer-events:auto; font-family:var(--f-display); font-style:italic; font-size:clamp(1.3rem,3.4vw,2.4rem); border-bottom:1px solid rgba(235,237,250,.35); padding-bottom:.15em; transition:border-color .3s; }
+.contact .mailto:hover{ border-color:var(--cyan); }
+.contact .socials{ margin-top:3.4rem; display:flex; gap:2.2rem; justify-content:center; flex-wrap:wrap; }
+.contact .socials a{ font-family:var(--f-mono); font-size:.74rem; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); pointer-events:auto; }
+.contact .socials a:hover{ color:var(--cyan); }
+.contact .colophon{ margin-top:5.5rem; padding-top:2rem; border-top:1px solid rgba(156,124,255,.16); display:flex; justify-content:space-between; gap:1rem; flex-wrap:wrap; font-family:var(--f-mono); font-size:.66rem; letter-spacing:.12em; color:var(--dimmer); }
+
+@media (prefers-reduced-motion:reduce){
+  *{ animation:none !important; transition:none !important; }
+  .rise{ opacity:1 !important; transform:none !important; }
+  body{ cursor:auto; }
+  .cursor,#stardust{ display:none; }
+  .nova .verse,.nova .verse-sub{ opacity:1; }
+}
+</style>
+</head>
+<body>
+
+<!-- =============================== CHROME =============================== -->
+<div class="chrome" id="chrome">
+  <div class="top">
+    <a class="brand" href="#top"><b>Vijaya Yeditha</b> · atlas</a>
+    <nav class="top-links" aria-label="quick links">
+      <a href="https://github.com/VijayaY836" data-link target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" data-link target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vijayayeditha8537@gmail.com" data-link target="_blank" rel="noopener">Email</a>
+      <a href="Resume.pdf" data-link download="Vijaya-Yeditha-Resume.pdf">Resume</a>
+    </nav>
+    <nav class="index">
+      <a href="#origin">Origin</a>
+      <a href="#atlas">The Atlas</a>
+      <a href="#signals">Signals</a>
+      <a href="#contact">Transmit</a>
+    </nav>
+  </div>
+  <div class="cat-readout"><span id="readout">OBJ 000 / 011</span><span class="bar"><i id="progbar"></i></span></div>
+</div>
+
+<!-- constellation spine -->
+<svg class="spine" id="spine" viewBox="0 0 70 1000" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+  <path class="line" id="line" d="M35 12 L20 150 L50 285 L26 420 L52 560 L30 700 L50 840 L35 988"/>
+  <g class="star" data-at="0.01"><circle class="halo" cx="35" cy="12" r="7" fill="#55D6E6" opacity=".35"/><circle cx="35" cy="12" r="3" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.14"><circle class="halo" cx="20" cy="150" r="7" fill="#9C7CFF" opacity=".35"/><circle cx="20" cy="150" r="3" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.28"><circle class="halo" cx="50" cy="285" r="8" fill="#F05C9C" opacity=".35"/><circle cx="50" cy="285" r="3.4" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.42"><circle class="halo" cx="26" cy="420" r="7" fill="#55D6E6" opacity=".35"/><circle cx="26" cy="420" r="3" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.56"><circle class="halo" cx="52" cy="560" r="8" fill="#F3C46B" opacity=".35"/><circle cx="52" cy="560" r="3.4" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.70"><circle class="halo" cx="30" cy="700" r="7" fill="#9C7CFF" opacity=".35"/><circle cx="30" cy="700" r="3" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.84"><circle class="halo" cx="50" cy="840" r="8" fill="#F05C9C" opacity=".35"/><circle cx="50" cy="840" r="3.4" fill="#EBEDFA"/></g>
+  <g class="star" data-at="0.97"><circle class="halo" cx="35" cy="988" r="9" fill="#55D6E6" opacity=".4"/><circle cx="35" cy="988" r="4" fill="#EBEDFA"/></g>
+</svg>
+
+<div class="cursor" id="cursor"></div>
+<canvas id="stardust" aria-hidden="true"></canvas>
+
+<!-- =============================== HERO =============================== -->
+<header class="hero" id="top">
+  <svg class="galaxy" id="galaxy" viewBox="-110 -110 220 220" aria-hidden="true">
+    <defs>
+      <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#FFF6E2"/>
+        <stop offset="35%" stop-color="#F3C46B"/>
+        <stop offset="70%" stop-color="#F05C9C"/>
+        <stop offset="100%" stop-color="#F05C9C" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g id="galaxy-arms"></g>
+    <circle class="core" cx="0" cy="0" r="34" fill="url(#coreGrad)"/>
+    <circle class="core" cx="0" cy="0" r="9" fill="#FFF6E2"/>
+  </svg>
+
+  <div class="wrap">
+    <span class="eyebrow hero-eyebrow rise" data-hero>Observation log · MMXXVI · Hyderabad</span>
+    <h1 class="display" id="heroTitle">
+      <span class="line-mask"><span class="line-inner"><span class="r1" data-split>A cosmos</span></span></span>
+      <span class="line-mask"><span class="line-inner"><span class="r2" data-split>of <em>things</em> built.</span></span></span>
+    </h1>
+    <p class="hero-sub rise" data-hero>I'm <b>Vijaya Yeditha</b>, a full-stack &amp; creative developer who charts each project like a celestial body: found in the dark, brought to light, and logged with its own coordinates.</p>
+    <div class="hero-meta">
+      <div class="m rise" data-hero><b>20+</b>objects charted</div>
+      <div class="m rise" data-hero><b>Full-stack</b>&amp; cinematic web</div>
+      <div class="m rise" data-hero><b>BVRIT HYD</b>College of Engg. for Women · CSE</div>
+    </div>
+  </div>
+
+  <div class="scroll-cue" data-hero style="opacity:0">
+    <span>Scroll to traverse</span>
+    <span class="stalk"></span>
+  </div>
+</header>
+
+<!-- =============================== ORIGIN =============================== -->
+<section class="band manifesto" id="origin">
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>Field 01 — the cartographer</p>
+    <div class="intro-box rise" data-reveal style="margin-top:1.8rem">
+      <span class="log-tag"><i></i>Log Entry — 01</span>
+      <p class="big">
+        <span data-words>I map code the way astronomers map the sky: <b>fix the fundamentals</b> before naming the wonder. I build <em>full-stack</em> systems and <em>cinematic</em> web — but the constant is a lifelong pull toward <b>seeking</b>, questioning, and charting what's worth keeping.</span>
+      </p>
+    </div>
+    <div class="grid">
+      <div data-reveal><h4>What I chart</h4><p>Multi-agent tools, RAG systems, real-time apps, custom interpreters, and scroll-driven experiences — engineered to work first, then made luminous.</p></div>
+      <div data-reveal><h4>How I navigate</h4><p>Fundamentals as gravity. Polished, colorful interfaces as light. Shipped to GitHub Pages, Vercel, and Render — one clean file at a time.</p></div>
+      <div data-reveal><h4>Beyond the atlas</h4><p>Telugu history, Indian philosophy, literature, chess, sketching, and classical dance. Travel as an intellectual pursuit. Every orbit feeds the work.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== SUPERNOVA =============================== -->
+<section class="nova" id="nova">
+  <div class="burst" id="burst"></div>
+  <div class="ring" id="ring1" style="width:40px;height:40px"></div>
+  <div class="ring" id="ring2" style="width:40px;height:40px"></div>
+  <div style="position:relative;z-index:3;text-align:center">
+    <p class="verse" id="verse">Every system<br>begins as <em>light.</em></p>
+    <p class="verse-sub" id="verseSub">— collapse, then radiance</p>
+  </div>
+</section>
+
+<!-- =============================== THE ATLAS =============================== -->
+<section class="atlas" id="atlas">
+  <div class="head">
+    <p class="eyebrow rise" data-reveal>Field 02 — the atlas</p>
+    <h2 class="display rise" data-reveal>Charted objects.</h2>
+    <p class="rise" data-reveal>Seven principal bodies from the log. Each one shipped, each a different sky — from multi-agent systems to a language kindled from first light.</p>
+  </div>
+
+  <div class="gallery" id="gallery">
+    <div class="gallery-track" id="track">
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 001 · 2025</span><span class="obj-tag">full-stack · live</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><circle cx="50" cy="50" r="12" fill="#F3C46B" stroke="none"/><ellipse cx="50" cy="50" rx="34" ry="34"/><circle cx="84" cy="50" r="5" fill="#9C7CFF" stroke="none"/><ellipse cx="50" cy="50" rx="22" ry="22" stroke="#9C7CFF" stroke-dasharray="3 4"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 18h 36m · DEC +38° 47′</div>
+        <div class="obj-desig">The Focus System</div>
+        <h3 class="obj-name">StudyBase</h3>
+        <p class="obj-desc">A full student-productivity platform — React + Flask + Supabase auth &amp; Postgres, with an AI Focus Advisor as its centerpiece. Deployed and live; the hackathon flagship.</p>
+        <div class="obj-foot"><span class="chip">React</span><span class="chip">Flask</span><span class="chip">Supabase</span><a class="obj-link" href="https://study-base-nine.vercel.app" target="_blank" rel="noopener" data-link>Visit <span class="arw">→</span></a></div>
+      </article>
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 002 · 2025</span><span class="obj-tag">RAG · AI</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#9C7CFF" stroke-width="2"><circle cx="44" cy="44" r="20"/><path d="M58 58l16 16" stroke="#F05C9C"/><path d="M44 34v20M34 44h20" stroke="#55D6E6"/><circle cx="44" cy="44" r="3" fill="#FFF6E2" stroke="none"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 12h 30m · DEC +12° 23′</div>
+        <div class="obj-desig">The Oracle Cloud</div>
+        <h3 class="obj-name">Sourcerer</h3>
+        <p class="obj-desc">Ask your documents anything. A single-service RAG engine — FastAPI, fastembed, ChromaDB — under an aurora-lit interface, architected as one origin to sidestep CORS entirely.</p>
+        <div class="obj-foot"><span class="chip">FastAPI</span><span class="chip">ChromaDB</span><span class="chip">RAG</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
+      </article>
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 003 · 2025</span><span class="obj-tag">agent</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><path d="M22 78c20-6 34-20 44-44" stroke-dasharray="2 5"/><circle cx="70" cy="30" r="9" fill="#F05C9C" stroke="none"/><path d="M70 30l18-14M70 30l14 18M70 30l20 4" stroke="#55D6E6"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 22h 57m · DEC −29° 37′</div>
+        <div class="obj-desig">The Wayfarer Comet</div>
+        <h3 class="obj-name">Waypoint</h3>
+        <p class="obj-desc">A browser-automation agent that narrates its own journey. FastAPI + Playwright driving a live WebSocket dashboard, containerized onto Render from Playwright's own image.</p>
+        <div class="obj-foot"><span class="chip">Playwright</span><span class="chip">WebSocket</span><span class="chip">Docker</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
+      </article>
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 004 · 2025</span><span class="obj-tag">multi-agent</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><path d="M50 26 30 60M50 26 70 60M30 60 40 82M70 60 60 82" stroke="#9C7CFF"/><circle cx="50" cy="26" r="6" fill="#F05C9C" stroke="none"/><circle cx="30" cy="60" r="5" fill="#55D6E6" stroke="none"/><circle cx="70" cy="60" r="5" fill="#55D6E6" stroke="none"/><circle cx="40" cy="82" r="5" fill="#F3C46B" stroke="none"/><circle cx="60" cy="82" r="5" fill="#F3C46B" stroke="none"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 03h 47m · DEC +24° 07′</div>
+        <div class="obj-desig">The Five-Star Cluster</div>
+        <h3 class="obj-name">TechVest Agent</h3>
+        <p class="obj-desc">A five-agent LangGraph recruitment crew with a human-in-the-loop gate and built-in fairness checks. Pydantic-validated, Streamlit-faced, Claude-powered via OpenRouter.</p>
+        <div class="obj-foot"><span class="chip">LangGraph</span><span class="chip">Pydantic</span><span class="chip">Streamlit</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
+      </article>
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 005 · 2025</span><span class="obj-tag">from scratch</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><path d="M50 18v64M18 50h64M28 28l44 44M72 28 28 72"/><circle cx="50" cy="50" r="8" fill="#FFF6E2" stroke="none"/><circle cx="50" cy="50" r="16" stroke="#F05C9C"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 06h 45m · DEC −16° 43′</div>
+        <div class="obj-desig">First Light</div>
+        <h3 class="obj-name">Slate</h3>
+        <p class="obj-desc">A programming language kindled from nothing in Python — lexer, parser, AST, and a tree-walking evaluator with arrays, functions, and full control flow. Origins all the way down.</p>
+        <div class="obj-foot"><span class="chip">Python</span><span class="chip">Interpreter</span><span class="chip">AST</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
+      </article>
+
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 006 · 2025</span><span class="obj-tag">client-side</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#9C7CFF" stroke-width="2"><circle cx="38" cy="50" r="12" fill="#F05C9C" stroke="none"/><circle cx="66" cy="50" r="12" fill="#55D6E6" stroke="none" opacity=".85"/><ellipse cx="52" cy="50" rx="30" ry="14"/><path d="M52 36v28" stroke-dasharray="2 4"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 07h 34m · DEC +31° 53′</div>
+        <div class="obj-desig">The Binary Twins</div>
+        <h3 class="obj-name">Semblance</h3>
+        <p class="obj-desc">Duplicate-image detection that never leaves your browser. Perceptual pHash paired with an FNV-1a byte signature, presented in a poised fixed-viewport dashboard.</p>
+        <div class="obj-foot"><span class="chip">pHash</span><span class="chip">Canvas</span><span class="chip">Offline</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- minor bodies -->
+<section class="band minor">
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>The outer belt — minor bodies</p>
+    <div class="grid" style="margin-top:2.4rem">
+      <div class="cell" data-reveal><span class="n">007</span><h5>Inkwell</h5><p>Real-time collaborative whiteboard — Express + Socket.IO on Canvas 2D, multi-tool, deployed to Render.</p></div>
+      <div class="cell" data-reveal><span class="n">008</span><h5>CVD Simulator</h5><p>Color-vision-deficiency simulator using literature-accurate Machado 2009 matrices and a linearized sRGB pipeline.</p></div>
+      <div class="cell" data-reveal><span class="n">009</span><h5>Secret Scanner</h5><p>A CLI credential scanner — 30+ regex signatures, Shannon-entropy fallback, pre-commit hook and CI.</p></div>
+      <div class="cell" data-reveal><span class="n">010</span><h5>Trajectory</h5><p>A GPA/CGPA calculator built to institutional grading regulation, with an SVG ribbon chart.</p></div>
+      <div class="cell" data-reveal><span class="n">011</span><h5>Cardsmith</h5><p>Single-file business-card generator, four templates, html2canvas + jsPDF export, inline SVG icons.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== REGISTERED PHENOMENA (patents) =============================== -->
+<section class="band patents" id="patents">
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>Field 02.5 — registered phenomena</p>
+    <h2 class="display rise" data-reveal>Patented discoveries.</h2>
+    <p class="lede rise" data-reveal>Two filings from outside the codebase — where research turns into a claimed, catalogued phenomenon of its own.</p>
+
+    <div class="patent-grid">
+      <article class="object patent-card" data-reveal>
+        <div class="obj-top"><span class="obj-no">APPL. 202541055673 A</span><span class="obj-tag">materials science</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><circle cx="50" cy="50" r="8" fill="#F05C9C" stroke="none"/><circle cx="50" cy="22" r="4" fill="#EBEDFA" stroke="none"/><circle cx="74" cy="64" r="4" fill="#55D6E6" stroke="none"/><circle cx="26" cy="64" r="4" fill="#9C7CFF" stroke="none"/><path d="M50 50 50 22M50 50 74 64M50 50 26 64"/><ellipse cx="50" cy="50" rx="34" ry="34" stroke-dasharray="2 5" stroke="#9C7CFF"/></g></svg>
+        </div>
+        <div class="obj-coord">Filed · Provisional Patent Application, India</div>
+        <div class="obj-desig">The Ferrite Cluster</div>
+        <h3 class="obj-name">Ultrasonication-Assisted Synthesis of Soft Magnetic NiFe₂O₄ Nanoparticles and Related Methods</h3>
+        <p class="obj-desc">A materials-science innovation synthesizing NiFe₂O₄ nanomaterials via sol-gel, co-precipitation, and ultrasonication-assisted co-precipitation. The ultrasonication route improves particle dispersion, reduces crystallite size, and yields soft magnetic properties suited to biomedical and high-frequency electronics.</p>
+        <div class="obj-foot"><span class="chip">Nanomaterials</span><span class="chip">Magnetism</span><span class="chip">Sol-Gel</span><span class="patent-status">IN 202541055673 A</span></div>
+      </article>
+
+      <article class="object patent-card" data-reveal>
+        <div class="obj-top"><span class="obj-no">APPL. 202541056107 A</span><span class="obj-tag">wearable health tech</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><rect x="34" y="22" width="32" height="56" rx="10"/><path d="M40 50h6l4-12 6 24 5-12h9" stroke="#F05C9C"/><circle cx="50" cy="14" r="3" fill="#F3C46B" stroke="none"/><circle cx="50" cy="86" r="3" fill="#9C7CFF" stroke="none"/></g></svg>
+        </div>
+        <div class="obj-coord">Filed · Provisional Patent Application, India</div>
+        <div class="obj-desig">The Posture Signal</div>
+        <h3 class="obj-name">Smartwatch-Based Adaptive Posture Monitoring and Feedback System with User-Specific Identification</h3>
+        <p class="obj-desc">A fully offline, smartwatch-based system that infers posture in real time from onboard motion sensors and an embedded ML model, delivering adaptive haptic or audio feedback. Includes behavioral-biometric user identification and personalized incremental learning tuned to individual biomechanics.</p>
+        <div class="obj-foot"><span class="chip">Wearables</span><span class="chip">Embedded ML</span><span class="chip">Biometrics</span><span class="patent-status">IN 202541056107 A</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== SIGNALS =============================== -->
+<section class="band signals" id="signals">
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>Field 03 — signals from the observer</p>
+    <h2 class="display rise" data-reveal>What comes in off-axis.</h2>
+    <p class="lede rise" data-reveal>The charted sky is only part of the log. These are the background signals — the reading, thinking, and playing that keep the whole instrument tuned.</p>
+
+    <div class="signal-grid">
+      <div class="signal-card" data-reveal><span class="signal-idx">i</span><h3>Telugu, <em>living</em> &amp; historied</h3><p>The language and its long memory — where I go to feel time.</p></div>
+      <div class="signal-card" data-reveal><span class="signal-idx">ii</span><h3>Indian philosophy &amp; <em>heritage</em></h3><p>Ancient frameworks that still out-think most product roadmaps.</p></div>
+      <div class="signal-card" data-reveal><span class="signal-idx">iii</span><h3>Chess &amp; the long <em>game</em></h3><p>Patience, structure, and the quiet joy of a plan resolving.</p></div>
+      <div class="signal-card" data-reveal><span class="signal-idx">iv</span><h3>Classical <em>dance</em> &amp; sketching</h3><p>Discipline in motion; observation with a pencil.</p></div>
+      <div class="signal-card" data-reveal><span class="signal-idx">v</span><h3>Literature, <em>far</em> &amp; near</h3><p>Indian and international — narrative as the original interface.</p></div>
+      <div class="signal-card" data-reveal><span class="signal-idx">vi</span><h3>Travel as <em>inquiry</em></h3><p>Not escape — fieldwork. Every place another coordinate.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== INSTRUMENTS =============================== -->
+<section class="band instruments">
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>Field 04 — instruments</p>
+    <h2 class="display rise" data-reveal>What I navigate by.</h2>
+    <p class="sub rise" data-reveal>The instrument panel — grouped by what each tool is for, not just listed at random.</p>
+
+    <div class="console">
+      <div class="cat c-cyan" data-reveal>
+        <div class="cat-label"><i></i>Languages</div>
+        <div class="skill-chips">
+          <span class="skill-chip">Python</span><span class="skill-chip">JavaScript / TypeScript</span><span class="skill-chip">Java</span><span class="skill-chip">C</span><span class="skill-chip">SQL</span>
+        </div>
+      </div>
+      <div class="cat c-magenta" data-reveal>
+        <div class="cat-label"><i></i>Frameworks &amp; Libraries</div>
+        <div class="skill-chips">
+          <span class="skill-chip">React</span><span class="skill-chip">Next.js</span><span class="skill-chip">Vite</span><span class="skill-chip">Tailwind CSS</span><span class="skill-chip">Three.js</span><span class="skill-chip">GSAP</span><span class="skill-chip">Flask</span><span class="skill-chip">FastAPI</span>
+        </div>
+      </div>
+      <div class="cat c-violet" data-reveal>
+        <div class="cat-label"><i></i>Data, Cloud &amp; AI</div>
+        <div class="skill-chips">
+          <span class="skill-chip">PostgreSQL</span><span class="skill-chip">MongoDB</span><span class="skill-chip">Supabase</span><span class="skill-chip">DBMS</span><span class="skill-chip">Docker</span><span class="skill-chip">LangGraph</span><span class="skill-chip">HuggingFace</span><span class="skill-chip">OpenRouter</span>
+        </div>
+      </div>
+      <div class="cat c-gold" data-reveal>
+        <div class="cat-label"><i></i>Working Style</div>
+        <div class="skill-chips">
+          <span class="skill-chip">Leadership</span><span class="skill-chip">Team Work</span><span class="skill-chip">Critical Thinking</span><span class="skill-chip">Creativity</span><span class="skill-chip">Communication</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== TRANSMISSION =============================== -->
+<section class="contact" id="contact">
+  <div class="glow"></div>
+  <div class="wrap">
+    <p class="eyebrow rise" data-reveal>Field 05 — transmission</p>
+    <h2 class="display rise" data-reveal>Let's chart<br>something <em>together.</em></h2>
+    <a class="mailto rise" data-reveal href="mailto:vijayayeditha564@gmail.com" data-link>vijayayeditha564@gmail.com</a>
+    <div class="socials rise" data-reveal>
+      <a href="https://github.com/VijayaY836" data-link target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" data-link target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vijayayeditha8537@gmail.com" data-link target="_blank" rel="noopener">Email</a>
+      <a href="Resume.pdf" data-link download="Vijaya-Yeditha-Resume.pdf">Resume</a>
+    </div>
+    <div class="colophon">
+      <span>A stellar atlas by Vijaya Yeditha — observed from Hyderabad</span>
+      <span>Fraunces · Instrument Sans · Space Mono</span>
+      <span>© MMXXVI</span>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== SCRIPTS =============================== -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  var REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var FINE = window.matchMedia("(pointer:fine)").matches;
+  var hasGSAP = typeof window.gsap !== "undefined";
+  if (hasGSAP && window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- SMOOTH SCROLL ---------- */
+  var lenis = null;
+  if (!REDUCED && typeof window.Lenis !== "undefined") {
+    lenis = new Lenis({ lerp:0.09, wheelMultiplier:1, smoothWheel:true });
+    if (hasGSAP) {
+      lenis.on("scroll", ScrollTrigger.update);
+      gsap.ticker.add(function(t){ lenis.raf(t*1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      requestAnimationFrame(function raf(time){ lenis.raf(time); requestAnimationFrame(raf); });
+    }
+  }
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener("click", function(e){
+      var id = a.getAttribute("href");
+      if (id.length < 2) return;
+      var el = document.querySelector(id);
+      if (!el) return;
+      e.preventDefault();
+      if (lenis) lenis.scrollTo(el, { offset:0, duration:1.4 });
+      else el.scrollIntoView({ behavior: REDUCED ? "auto":"smooth" });
+    });
+  });
+
+  /* ---------- split chars ---------- */
+  function splitChars(node){
+    var text = node.textContent; node.textContent = "";
+    var frag = document.createDocumentFragment();
+    for (var i=0;i<text.length;i++){
+      var span = document.createElement("span");
+      span.className = "char";
+      span.textContent = text[i] === " " ? "\u00A0" : text[i];
+      frag.appendChild(span);
+    }
+    node.appendChild(frag);
+    return node.querySelectorAll(".char");
+  }
+
+  /* ---------- build spiral galaxy ---------- */
+  function buildGalaxy(){
+    var g = document.getElementById("galaxy-arms");
+    if (!g) return;
+    var ns="http://www.w3.org/2000/svg";
+    var cols=["#F05C9C","#55D6E6","#9C7CFF","#F3C46B","#EBEDFA"];
+    var arms=3, per=54;
+    for (var a=0;a<arms;a++){
+      var base=a*(Math.PI*2/arms);
+      for (var i=1;i<=per;i++){
+        var t=i/per;
+        var ang=base + t*4.2;
+        var r=6 + t*98;
+        var jitter=(Math.random()-.5)*(6+t*14);
+        var x=Math.cos(ang)*r + Math.cos(ang+1.6)*jitter;
+        var y=Math.sin(ang)*r + Math.sin(ang+1.6)*jitter;
+        var c=document.createElementNS(ns,"circle");
+        c.setAttribute("cx",x.toFixed(1));
+        c.setAttribute("cy",y.toFixed(1));
+        c.setAttribute("r",(Math.random()*1.6 + (1-t)*1.8 + .5).toFixed(2));
+        c.setAttribute("fill",cols[Math.floor(Math.random()*(t>.5?5:3))]);
+        c.setAttribute("opacity",(0.35+Math.random()*0.55).toFixed(2));
+        g.appendChild(c);
+      }
+    }
+  }
+
+  /* ---------- HERO load sequence ---------- */
+  function heroSequence(){
+    if (!hasGSAP){
+      document.querySelectorAll("[data-hero]").forEach(function(e){ e.style.opacity=1; e.style.transform="none"; });
+      document.querySelectorAll(".line-inner").forEach(function(e){ e.style.transform="none"; });
+      return;
+    }
+    var tl = gsap.timeline({ defaults:{ ease:"power3.out" } });
+    gsap.set("#galaxy", { scale:.7, opacity:0, rotation:-40, transformOrigin:"center center" });
+    gsap.set("#galaxy-arms circle", { scale:0, transformOrigin:"0px 0px" });
+    gsap.set("#galaxy .core", { scale:0, transformOrigin:"center" });
+
+    tl.to("#galaxy", { opacity:1, scale:1, duration:2.2, ease:"power2.out" }, .1)
+      .to("#galaxy .core", { scale:1, duration:1, ease:"back.out(1.8)" }, .2)
+      .to("#galaxy-arms circle", { scale:1, duration:1.4, stagger:{ each:.004, from:"center" }, ease:"power2.out" }, .3);
+
+    tl.from(".line-inner", { yPercent:120, duration:1.15, stagger:.12, ease:"power4.out" }, .4);
+    tl.to("[data-hero]", { opacity:1, y:0, duration:1, stagger:.09, ease:"power3.out" }, .85);
+
+    if (!REDUCED){
+      gsap.to("#galaxy", { rotation:"+=360", duration:120, repeat:-1, ease:"none", delay:2.4, transformOrigin:"center center" });
+      gsap.to("#galaxy", { y:"+=16", duration:8, repeat:-1, yoyo:true, ease:"sine.inOut", delay:2.4 });
+    }
+    if (window.ScrollTrigger){
+      gsap.to("#galaxy", { yPercent:24, ease:"none", scrollTrigger:{ trigger:"#top", start:"top top", end:"bottom top", scrub:true }});
+      gsap.to("#heroTitle", { yPercent:-8, ease:"none", scrollTrigger:{ trigger:"#top", start:"top top", end:"bottom top", scrub:true }});
+    }
+  }
+
+  /* ---------- scroll reveals ---------- */
+  function reveals(){
+    if (!hasGSAP || !window.ScrollTrigger){
+      document.querySelectorAll("[data-reveal],.rise").forEach(function(e){ e.style.opacity=1; e.style.transform="none"; });
+      return;
+    }
+    gsap.utils.toArray("[data-reveal]").forEach(function(el){
+      gsap.fromTo(el, { opacity:0, y:34 }, { opacity:1, y:0, duration:1.1, ease:"power3.out", scrollTrigger:{ trigger:el, start:"top 84%" }});
+    });
+
+    var mani = document.querySelector("[data-words]");
+    if (mani){
+      var temp = document.createElement("div"); temp.innerHTML = mani.innerHTML;
+      (function wrap(parent){
+        Array.prototype.slice.call(parent.childNodes).forEach(function(n){
+          if (n.nodeType === 3){
+            var frag = document.createDocumentFragment();
+            n.textContent.split(/(\s+)/).forEach(function(tok){
+              if (tok.trim()===""){ frag.appendChild(document.createTextNode(tok)); return; }
+              var s=document.createElement("span"); s.className="w"; s.style.display="inline-block"; s.textContent=tok; frag.appendChild(s);
+            });
+            parent.replaceChild(frag, n);
+          } else if (n.nodeType===1){ wrap(n); }
+        });
+      })(temp);
+      mani.innerHTML = temp.innerHTML;
+      gsap.fromTo(mani.querySelectorAll(".w"), { opacity:.14 }, { opacity:1, duration:.5, stagger:.03, ease:"none", scrollTrigger:{ trigger:mani, start:"top 78%", end:"bottom 60%", scrub:1 }});
+    }
+
+    gsap.utils.toArray(".obj-name").forEach(function(n){
+      var chars = splitChars(n);
+      gsap.from(chars, { yPercent:110, opacity:0, duration:.7, stagger:.02, ease:"power3.out", scrollTrigger:{ trigger:n, start:"top 92%" }});
+    });
+  }
+
+  /* ---------- constellation spine ---------- */
+  function spine(){
+    var line = document.getElementById("line");
+    if (!line || !hasGSAP || !window.ScrollTrigger) return;
+    var len = line.getTotalLength();
+    line.style.strokeDasharray = len;
+    line.style.strokeDashoffset = len;
+    gsap.to(line, { strokeDashoffset:0, ease:"none",
+      scrollTrigger:{ start:0, end:"max", scrub:.4,
+        onUpdate:function(self){
+          var p = self.progress;
+          document.querySelectorAll(".spine .star").forEach(function(s){
+            var at = parseFloat(s.getAttribute("data-at"));
+            var on = p >= at;
+            gsap.to(s, { opacity:on?1:0, scale:on?1:0, duration:.5, ease:"back.out(1.7)", overwrite:"auto" });
+          });
+          var bar = document.getElementById("progbar"); if (bar) bar.style.right = (100-p*100)+"%";
+          var read = document.getElementById("readout"); if (read) read.textContent = "OBJ " + String(Math.round(p*11)).padStart(3,"0") + " / 011";
+        }
+      }});
+  }
+
+  /* ---------- SUPERNOVA interlude ---------- */
+  function nova(){
+    if (!hasGSAP || !window.ScrollTrigger){
+      document.getElementById("verse").style.opacity=1;
+      document.getElementById("verseSub").style.opacity=1;
+      return;
+    }
+    var section = document.getElementById("nova");
+    var chrome = document.getElementById("chrome");
+    var tl = gsap.timeline({
+      scrollTrigger:{ trigger:section, start:"top top", end:"+=180%", pin:true, scrub:1,
+        onUpdate:function(self){
+          if (self.progress > .34 && self.progress < .74) chrome.classList.add("flare");
+          else chrome.classList.remove("flare");
+        }
+      }
+    });
+    // collapse: burst brightens & swells, background flashes to light, then fades back to void
+    tl.to("#burst", { scale:3, duration:.5, ease:"power1.in" }, 0)
+      .to(section, { backgroundColor:"#FFF6E2", duration:.4, ease:"power2.in" }, .45)
+      .fromTo(["#ring1","#ring2"], { scale:0, opacity:.9 }, { scale:26, opacity:0, duration:1, ease:"power2.out", stagger:.12 }, .45)
+      .to("#burst", { scale:60, opacity:0, duration:.6, ease:"power2.out" }, .5)
+      .to(section, { backgroundColor:"#070A19", duration:.8, ease:"power2.out" }, .85)
+      .to("#verse", { opacity:1, duration:.5 }, 1.0)
+      .to("#verseSub", { opacity:1, duration:.5 }, 1.2);
+  }
+
+  /* ---------- horizontal atlas ---------- */
+  function atlas(){
+    if (!hasGSAP || !window.ScrollTrigger) return;
+    var mm = gsap.matchMedia();
+    mm.add("(min-width: 861px)", function(){
+      var track = document.getElementById("track");
+      var gallery = document.getElementById("gallery");
+      var tween = gsap.to(track, {
+        x: function(){ return -(track.scrollWidth - gallery.offsetWidth); },
+        ease:"none",
+        scrollTrigger:{ trigger:gallery, start:"top top",
+          end:function(){ return "+=" + (track.scrollWidth - gallery.offsetWidth + window.innerHeight*0.2); },
+          pin:true, scrub:1, invalidateOnRefresh:true, anticipatePin:1 }
+      });
+      gsap.utils.toArray(".object").forEach(function(card){
+        gsap.from(card, { y:44, opacity:0, duration:.6, ease:"power2.out", scrollTrigger:{ trigger:card, containerAnimation:tween, start:"left 92%" }});
+      });
+    });
+    mm.add("(max-width: 860px)", function(){
+      gsap.utils.toArray(".object").forEach(function(card){
+        gsap.from(card, { y:36, opacity:0, duration:.8, ease:"power3.out", scrollTrigger:{ trigger:card, start:"top 88%" }});
+      });
+    });
+  }
+
+  /* ---------- stardust starfield ---------- */
+  function stardust(){
+    if (REDUCED) return;
+    var c = document.getElementById("stardust"); if (!c) return;
+    var ctx = c.getContext("2d");
+    var W,H,stars,shoot=[];
+    function resize(){ W=c.width=window.innerWidth; H=c.height=window.innerHeight; }
+    function seed(){ stars=[]; var n=Math.min(160, Math.round(W*H/9000));
+      for(var i=0;i<n;i++) stars.push({ x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.3+.2,
+        base:Math.random()*.5+.2, tw:Math.random()*Math.PI*2, sp:Math.random()*.02+.005,
+        drift:Math.random()*.12+.02, col: Math.random()<.15 ? "85,214,230" : (Math.random()<.3 ? "156,124,255":"235,237,250") }); }
+    var t=0;
+    function frame(){
+      ctx.clearRect(0,0,W,H); t+=.016;
+      for(var i=0;i<stars.length;i++){ var s=stars[i];
+        s.y += s.drift; if (s.y>H+2){ s.y=-2; s.x=Math.random()*W; }
+        var a = s.base + Math.sin(t*2+s.tw)*.28;
+        if (a<0) a=0;
+        ctx.beginPath(); ctx.fillStyle="rgba("+s.col+","+a.toFixed(2)+")"; ctx.arc(s.x,s.y,s.r,0,7); ctx.fill();
+      }
+      if (Math.random()<.006 && shoot.length<2){ shoot.push({ x:Math.random()*W*.7+W*.2, y:Math.random()*H*.4, len:0, max:Math.random()*160+120, sp:Math.random()*8+9, ang:Math.PI*0.72 }); }
+      for(var j=shoot.length-1;j>=0;j--){ var m=shoot[j];
+        var dx=Math.cos(m.ang)*m.sp, dy=Math.sin(m.ang)*m.sp;
+        m.x+=dx; m.y+=dy; m.len=Math.min(m.max, m.len+m.sp*2);
+        var gx=m.x-Math.cos(m.ang)*m.len, gy=m.y-Math.sin(m.ang)*m.len;
+        var grad=ctx.createLinearGradient(m.x,m.y,gx,gy);
+        grad.addColorStop(0,"rgba(255,246,226,.9)"); grad.addColorStop(1,"rgba(255,246,226,0)");
+        ctx.strokeStyle=grad; ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(m.x,m.y); ctx.lineTo(gx,gy); ctx.stroke();
+        if (m.y>H+40 || m.x>W+40) shoot.splice(j,1);
+      }
+      requestAnimationFrame(frame);
+    }
+    resize(); seed(); frame();
+    window.addEventListener("resize", function(){ resize(); seed(); });
+  }
+
+  /* ---------- custom cursor ---------- */
+  function cursor(){
+    if (!FINE) return;
+    var cur = document.getElementById("cursor"); if (!cur) return;
+    var x=innerWidth/2,y=innerHeight/2,tx=x,ty=y;
+    addEventListener("mousemove", function(e){ tx=e.clientX; ty=e.clientY; });
+    (function loop(){ x+=(tx-x)*.2; y+=(ty-y)*.2; cur.style.transform="translate("+x+"px,"+y+"px)"; requestAnimationFrame(loop); })();
+    document.querySelectorAll("a, button, [data-link]").forEach(function(el){
+      el.addEventListener("mouseenter", function(){ cur.classList.add("grow"); });
+      el.addEventListener("mouseleave", function(){ cur.classList.remove("grow"); });
+    });
+    var nova = document.getElementById("nova");
+    addEventListener("mousemove", function(e){
+      var over=false; if (nova){ var r=nova.getBoundingClientRect(); if (e.clientY>r.top && e.clientY<r.bottom && document.getElementById("chrome").classList.contains("flare")) over=true; }
+      cur.classList.toggle("dark", over);
+    });
+  }
+
+  /* ---------- magnetic ---------- */
+  function magnetic(){
+    if (!FINE) return;
+    document.querySelectorAll(".index a, .mailto, .socials a, .obj-link").forEach(function(el){
+      el.addEventListener("mousemove", function(e){ var r=el.getBoundingClientRect(); el.style.transform="translate("+((e.clientX-(r.left+r.width/2))*.25)+"px,"+((e.clientY-(r.top+r.height/2))*.35)+"px)"; });
+      el.addEventListener("mouseleave", function(){ el.style.transform=""; });
+    });
+  }
+
+  /* ---------- card tilt ---------- */
+  function tilt(){
+    if (!FINE) return;
+    document.querySelectorAll(".object").forEach(function(card){
+      card.addEventListener("mousemove", function(e){ var r=card.getBoundingClientRect(); var px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5; card.style.transform="perspective(900px) rotateX("+(-py*5)+"deg) rotateY("+(px*6)+"deg) translateY(-4px)"; });
+      card.addEventListener("mouseleave", function(){ card.style.transform=""; });
+    });
+  }
+
+  /* ---------- init ---------- */
+  buildGalaxy();
+  window.addEventListener("load", function(){
+    stardust(); heroSequence(); reveals(); spine(); nova(); atlas(); cursor(); magnetic(); tilt();
+    if (hasGSAP && window.ScrollTrigger){
+      ScrollTrigger.refresh();
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ ScrollTrigger.refresh(); });
+    }
+  });
+})();
+</script>
+</body>
+</html>

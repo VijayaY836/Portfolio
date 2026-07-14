@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vijaya — a garden at dusk</title>
+<meta name="description" content="The portfolio of Vijaya Bhaskara Lakshmi Yeditha — a slow stroll through an open flower garden as evening falls. Leave your worries at the gate." />
+<meta name="author" content="Vijaya Bhaskara Lakshmi Yeditha" />
+<meta name="theme-color" content="#141B3C" />
+<!-- Social preview (update og:url and og:image domain after you deploy) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vijaya — a garden at dusk" />
+<meta property="og:description" content="A portfolio you stroll through. Six projects in bloom, two patents filed, and the fireflies come out near the end." />
+<meta property="og:url" content="https://YOUR-DOMAIN-HERE/" />
+<meta property="og:image" content="https://YOUR-DOMAIN-HERE/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vijaya — a garden at dusk" />
+<meta name="twitter:description" content="A portfolio you stroll through. Six projects in bloom, two patents filed, and the fireflies come out near the end." />
+<meta name="twitter:image" content="https://YOUR-DOMAIN-HERE/og-image.png" />
+<link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="%23141B3C"/><g transform="translate(32 30)"><circle cx="0" cy="-11" r="7.5" fill="%23EE93AC"/><circle cx="10" cy="-5" r="7.5" fill="%23EE93AC"/><circle cx="6.5" cy="7" r="7.5" fill="%23EE93AC"/><circle cx="-6.5" cy="7" r="7.5" fill="%23EE93AC"/><circle cx="-10" cy="-5" r="7.5" fill="%23EE93AC"/><circle cx="0" cy="0" r="5.5" fill="%23F2D470"/></g><path d="M32 38 C31 46 33 52 32 58" stroke="%234A6639" stroke-width="3" fill="none" stroke-linecap="round"/></svg>' />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Karla:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+    
+  :root{
+    --sky-top:#FFE3B3; --sky-mid:#FFBE85; --sky-hor:#FF9E6B;
+    --fol-far:#5E7A46; --fol-mid:#4A6639; --fol-near:#37511F;
+    --ink:#2E1F35; --cream:#FFF6E8; --card:rgba(18,13,32,.55);
+    --card-line:rgba(255,240,220,.16);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{font-size:90%}
+  body{
+    font-family:'Karla',system-ui,sans-serif;
+    color:var(--cream);
+    overflow-x:clip;
+    background:#141B3C;
+  }
+  ::selection{background:#FFB13D;color:#2E1F35}
+
+  /* ---------- fixed atmosphere (back to front) ---------- */
+  .sky{
+    position:fixed;inset:0;z-index:-9;
+    background:linear-gradient(to bottom,var(--sky-top) 0%,var(--sky-mid) 46%,var(--sky-hor) 100%);
+  }
+  .sun{
+    position:fixed;left:50%;top:52vh;z-index:-8;
+    width:120px;height:120px;border-radius:50%;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 42% 38%, #FFF3C4, #FFD98A 55%, #FFB25E);
+    box-shadow:0 0 90px 40px rgba(255,205,120,.55), 0 0 220px 110px rgba(255,170,90,.28);
+    pointer-events:none;
+  }
+  .g-layer{position:fixed;left:0;right:0;bottom:0;pointer-events:none;will-change:transform}
+  .g-layer svg{display:block;width:100%}
+  .g-far {z-index:-7}
+  .g-far svg{height:26vh}
+  .g-mid {z-index:-6}
+  .g-mid svg{height:21vh}
+  .g-near{z-index:-5}
+  .g-near svg{height:15vh}
+  .far-fill{fill:var(--fol-far)}
+  .mid-fill{fill:var(--fol-mid)}
+  .near-fill{fill:var(--fol-near)}
+  .near-stem{stroke:var(--fol-near)}
+  .night-veil{
+    position:fixed;inset:0;z-index:-4;pointer-events:none;opacity:0;
+    background:linear-gradient(to bottom,
+      rgba(14,19,46,.14) 0%, rgba(14,19,46,.34) 55%, rgba(10,14,38,.82) 100%);
+  }
+  canvas#air{position:fixed;inset:0;z-index:-3;pointer-events:none}
+
+  /* ---------- fixed chrome ---------- */
+  .clock{
+    position:fixed;top:1.4rem;right:1.6rem;z-index:20;
+    font-variant-numeric:tabular-nums;font-size:.82rem;letter-spacing:.14em;
+    color:var(--cream);opacity:.85;text-shadow:0 1px 8px rgba(20,10,30,.35);
+    user-select:none;
+  }
+  .clock::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;
+    background:currentColor;margin-right:.55em;transform:translateY(-1px);opacity:.7}
+  .wordmark{
+    position:fixed;top:1.3rem;left:1.6rem;z-index:20;
+    font-family:'Fraunces',serif;font-style:italic;font-weight:400;
+    font-size:1.05rem;color:var(--cream);
+    text-shadow:0 1px 8px rgba(20,10,30,.35);text-decoration:none;
+  }
+  .top-links{
+    position:fixed;top:1.5rem;left:50%;transform:translateX(-50%);z-index:20;
+    display:flex;gap:1.6rem;
+    }
+    .top-links a{
+    font-size:.95rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;
+    color:var(--cream);text-decoration:none;opacity:.85;
+    text-shadow:0 1px 8px rgba(0, 0, 0, 0.35);
+    border-bottom:1px solid transparent;padding-bottom:2px;
+    }
+    .top-links a:hover,.top-links a:focus-visible{opacity:1;border-bottom-color:rgba(255,246,232,.5)}
+    @media (max-width:880px){
+    .top-links{gap:1rem;font-size:.6rem;top:4.4rem}
+    .top-links a{font-size:.64rem}
+    }
+
+  /* ---------- hero ---------- */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;
+    padding:0 6vw 14vh;position:relative;
+  }
+  .hero .eyebrow{
+    font-size:.8rem;letter-spacing:.34em;text-transform:uppercase;
+    color:#4A2E3E;font-weight:600;margin-bottom:1.4rem;
+  }
+  .hero h1{
+    font-family:'Fraunces',serif;font-weight:340;font-style:italic;
+    font-size:clamp(3rem,10vw,7.6rem);line-height:1.04;
+    color:var(--ink);letter-spacing:-.01em;text-wrap:balance;
+  }
+  .hero h1 em{font-style:normal;font-weight:560}
+  .hero p.sub{
+    max-width:36rem;margin-top:1.6rem;font-size:1.06rem;line-height:1.7;
+    color:#4A2E3E;font-weight:500;
+  }
+  .hero .badge{
+    margin-top:1.4rem;font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;
+    color:#4A2E3E;font-weight:700;opacity:.85;
+  }
+  .hint{
+    position:absolute;bottom:18vh;left:50%;transform:translateX(-50%);
+    font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;
+    color:#4A2E3E;font-weight:600;
+  }
+  .hint::after{
+    content:"";display:block;width:1px;height:34px;margin:.7rem auto 0;
+    background:linear-gradient(#4A2E3E,transparent);
+    animation:drip 2.2s ease-in-out infinite;
+  }
+  @keyframes drip{0%,100%{transform:scaleY(.4);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+  /* ---------- bloom sections ---------- */
+  .bloom-section{height:230vh;position:relative}
+  .pinwrap{
+    position:sticky;top:0;height:100vh;
+    display:flex;align-items:center;justify-content:center;
+    gap:4vw;padding:0 6vw 8vh;
+  }
+  .stage{flex:0 1 460px;display:flex;justify-content:center}
+  .stage svg{width:min(400px,36vw);height:auto;overflow:visible}
+  .card{
+    flex:0 1 480px;max-width:520px;
+    background:var(--card);border:1px solid var(--card-line);
+    border-radius:20px;padding:2.2rem 2.4rem 2.4rem;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 24px 60px rgba(10,6,22,.28);
+  }
+  .card .eyebrow{
+    display:flex;align-items:center;gap:.6rem;
+    font-size:.74rem;letter-spacing:.3em;text-transform:uppercase;
+    color:#F3E3C8;opacity:.85;font-weight:700;margin-bottom:1rem;
+  }
+  .card .eyebrow i{width:8px;height:8px;border-radius:50%;display:inline-block}
+  .card h2{
+    font-family:'Fraunces',serif;font-weight:480;
+    font-size:clamp(1.9rem,3.4vw,2.6rem);line-height:1.08;margin-bottom:.9rem;
+  }
+  .card p{font-size:.98rem;line-height:1.68;color:#EFE4D6}
+  .tags{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.3rem}
+  .tags span{
+    font-size:.72rem;letter-spacing:.08em;font-weight:700;
+    padding:.34rem .7rem;border-radius:99px;
+    border:1px solid var(--card-line);color:#F3E9DB;opacity:.9;
+  }
+  .card a.visit{
+    display:inline-block;margin-top:1.5rem;font-weight:700;font-size:.9rem;
+    letter-spacing:.06em;color:var(--cream);text-decoration:none;
+    border-bottom:1px solid rgba(255,246,232,.5);padding-bottom:2px;
+  }
+  .card a.visit:hover,.card a.visit:focus-visible{border-bottom-color:var(--cream)}
+  a:focus-visible{outline:2px solid #FFD98A;outline-offset:4px;border-radius:2px}
+  .petal,.leaf,.core{will-change:transform}
+  .stemline{fill:none;stroke-linecap:round}
+
+  /* ---------- about ---------- */
+  .about{min-height:80vh;padding-top:10vh}
+  .about-card{
+    width:min(660px,100%);
+    background:var(--card);border:1px solid var(--card-line);border-radius:20px;
+    padding:2.2rem 2.4rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 24px 60px rgba(10,6,22,.26);
+  }
+  .about-card p{font-size:1rem;line-height:1.75;color:#EFE4D6}
+  .about-card p + p{margin-top:1rem}
+  .about-card p strong{color:var(--cream);font-weight:700}
+  .about-facts{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:1.5rem}
+  .about-facts span{
+    font-size:.72rem;letter-spacing:.08em;font-weight:700;
+    padding:.34rem .7rem;border-radius:99px;
+    border:1px solid var(--card-line);color:#F3E9DB;opacity:.9;
+  }
+
+  /* ---------- quiet sections ---------- */
+  .quiet{
+    min-height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    padding:14vh 6vw 20vh;
+  }
+  .sec-head{text-align:center;margin-bottom:3rem;max-width:44rem}
+  .sec-head .eyebrow{
+    font-size:.76rem;letter-spacing:.32em;text-transform:uppercase;
+    font-weight:700;opacity:.8;margin-bottom:1rem;
+    text-shadow:0 1px 8px rgba(20,10,30,.3);
+  }
+  .sec-head h2{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:380;
+    font-size:clamp(2.2rem,5.4vw,3.8rem);line-height:1.1;text-wrap:balance;
+    text-shadow:0 2px 18px rgba(20,10,30,.28);
+  }
+  .sec-head p{margin-top:1rem;line-height:1.7;opacity:.88;font-size:1rem;
+    text-shadow:0 1px 8px rgba(20,10,30,.3)}
+
+  .row-list{display:flex;flex-direction:column;gap:1rem;width:min(680px,100%)}
+  .row{
+    background:var(--card);border:1px solid var(--card-line);border-radius:16px;
+    padding:1.4rem 1.7rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    display:flex;justify-content:space-between;gap:1.4rem;align-items:baseline;
+    box-shadow:0 18px 44px rgba(10,6,22,.24);
+  }
+  .row .what strong{font-family:'Fraunces',serif;font-weight:520;font-size:1.18rem;display:block}
+  .row .what span{display:block;font-size:.86rem;opacity:.8;margin-top:.2rem}
+  .row .what p{font-size:.9rem;line-height:1.6;color:#EFE4D6;margin-top:.55rem}
+  .row .when{
+    font-size:.76rem;letter-spacing:.12em;font-weight:700;opacity:.75;
+    white-space:nowrap;font-variant-numeric:tabular-nums;
+  }
+
+  .award-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:1rem;width:min(880px,100%);
+  }
+  .award{
+    background:var(--card);border:1px solid var(--card-line);border-radius:16px;
+    padding:1.4rem 1.5rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 18px 44px rgba(10,6,22,.24);
+  }
+  .award .medal{
+    font-size:.72rem;letter-spacing:.24em;text-transform:uppercase;font-weight:800;
+    color:#FFD98A;margin-bottom:.6rem;
+  }
+  .award strong{font-family:'Fraunces',serif;font-weight:520;font-size:1.06rem;display:block;line-height:1.3}
+  .award span{display:block;font-size:.84rem;opacity:.78;margin-top:.45rem;line-height:1.5}
+  .more-note{margin-top:1.6rem;font-family:'Fraunces',serif;font-style:italic;
+    opacity:.7;font-size:.95rem;text-shadow:0 1px 8px rgba(20,10,30,.3)}
+
+  .patent-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+    gap:1rem;width:min(880px,100%);
+  }
+  .patent{
+    background:var(--card);border:1px solid var(--card-line);border-radius:16px;
+    padding:1.7rem;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    box-shadow:0 18px 44px rgba(10,6,22,.24);
+  }
+  .patent .num{
+    font-size:.74rem;letter-spacing:.18em;font-weight:800;color:#FFD98A;
+    margin-bottom:.7rem;font-variant-numeric:tabular-nums;
+  }
+  .patent strong{font-family:'Fraunces',serif;font-weight:520;font-size:1.14rem;display:block;line-height:1.32}
+  .patent p{font-size:.9rem;line-height:1.65;color:#EFE4D6;margin-top:.7rem}
+
+  /* ---------- finale ---------- */
+  .finale{
+    min-height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;text-align:center;
+    padding:0 6vw 12vh;position:relative;
+  }
+  .finale .eyebrow{
+    font-size:.78rem;letter-spacing:.34em;text-transform:uppercase;
+    opacity:.75;font-weight:700;margin-bottom:1.4rem;
+  }
+  .finale h2{
+    font-family:'Fraunces',serif;font-style:italic;font-weight:360;
+    font-size:clamp(2.6rem,7vw,5.4rem);line-height:1.06;text-wrap:balance;
+  }
+  .finale p{max-width:33rem;margin-top:1.4rem;line-height:1.75;opacity:.88}
+  .links{display:flex;gap:2.2rem;margin-top:2.6rem;flex-wrap:wrap;justify-content:center}
+  .links a{
+    color:var(--cream);text-decoration:none;font-weight:700;
+    font-size:.92rem;letter-spacing:.14em;text-transform:uppercase;
+    border-bottom:1px solid rgba(255,246,232,.4);padding-bottom:3px;
+  }
+  .links a:hover{border-bottom-color:var(--cream)}
+  .signoff{
+    position:absolute;bottom:2.4rem;left:50%;transform:translateX(-50%);
+    font-family:'Fraunces',serif;font-style:italic;
+    font-size:.95rem;opacity:.65;white-space:nowrap;
+  }
+
+  /* ---------- responsive ---------- */
+  @media (max-width:880px){
+    .pinwrap{flex-direction:column;gap:2vh;padding-top:6vh;justify-content:flex-start}
+    .stage{flex:0 0 auto;margin-top:2vh}
+    .stage svg{width:min(260px,56vw)}
+    .card{flex:0 0 auto;padding:1.6rem 1.5rem 1.8rem;max-width:92vw}
+    .card h2{font-size:1.7rem}
+    .card p{font-size:.92rem}
+    .hero h1{font-size:clamp(2.6rem,13vw,4.6rem)}
+    .row{flex-direction:column;gap:.5rem}
+    .row .when{order:-1}
+    .g-far svg{height:20vh}.g-mid svg{height:16vh}.g-near svg{height:12vh}
+    .clock{right:1.1rem}.wordmark{left:1.1rem}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .hint::after{animation:none}
+  }
+</style>
+</head>
+<body>
+
+  <div class="sky" aria-hidden="true"></div>
+  <div class="sun" aria-hidden="true"></div>
+  <div class="g-layer g-far"  id="gfar"  aria-hidden="true"></div>
+  <div class="g-layer g-mid"  id="gmid"  aria-hidden="true"></div>
+  <div class="g-layer g-near" id="gnear" aria-hidden="true"></div>
+  <div class="night-veil" id="veil" aria-hidden="true"></div>
+  <canvas id="air" aria-hidden="true"></canvas>
+
+  <a class="wordmark" href="#top">Vijaya</a>
+  <div class="clock" id="clock" aria-hidden="true">5:47 PM</div>
+
+<nav class="top-links" aria-label="quick links">
+  <a href="https://github.com/VijayaY836" target="_blank" rel="noopener">GitHub</a>
+  <a href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vijayayeditha8537@gmail.com" target="_blank" rel="noopener">Email</a>
+  <a href="Resume.pdf" download="Vijaya-Yeditha-Resume.pdf">Resume</a>
+</nav>
+
+  <!-- ================= HERO ================= -->
+  <header class="hero" id="top">
+    <div class="eyebrow">a portfolio, at dusk</div>
+    <h1>Leave your worries<br/>at the <em>garden gate</em></h1>
+    <p class="sub">The evening is warm and the path is soft. I’m Vijaya —
+    I build software the way gardens grow: patiently, and in bloom.
+    Six projects are flowering along this walk, and the fireflies
+    come out near the end. Take your time.</p>
+    <div class="badge">BTech CSE · BVRIT Hyderabad College of Engineering for Women · GPA 9.43</div>
+    <br><br>
+    <div class="hint">scroll to stroll</div>
+  </header>
+
+  <!-- ================= ABOUT ================= -->
+  <section class="quiet about">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Just past the gate · 5:52 pm</div>
+      <h2>The gardener</h2>
+    </div>
+    <div class="about-card reveal">
+      <p>I’m <strong>Vijaya Bhaskara Lakshmi Yeditha</strong> — a Computer Science
+      undergraduate at BVRIT Hyderabad College of Engineering for Women(GPA 9.43) who treats building software
+      as a daily practice, not an occasional event. Full-stack apps, AI systems,
+      little languages, realtime tools — I plant something new almost every
+      season, and I don’t stop tending it until it blooms.</p>
+      <p>Along the way that habit has grown into two patent filings, a top-10
+      national hackathon finish, a shelf of first prizes, and internships in
+      climate AI and machine learning. But the honest summary is simpler:
+      I love to learn, I love to make, and I ship what I make.</p>
+      <div class="about-facts">
+        <span>Full-stack</span><span>AI &amp; GenAI</span><span>Hackathons</span>
+        <span>Books &amp; literature</span><span>Chess</span><span>Sketching</span>
+        <span>Classical dance</span><span>History</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= BLOOMS ================= -->
+  <section class="bloom-section" data-flower="marigold">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#FFB13D"></i>Golden hour · 6:05 pm</div>
+        <h2>Emotion Cipher</h2>
+        <p>Messages that know how they feel — and keep it secret. An AI-powered
+        secure messaging platform where DistilRoBERTa reads the emotion and
+        AES-256-CBC seals the envelope, with PBKDF2 key derivation and
+        zero-storage, privacy-first processing end to end.</p>
+        <div class="tags"><span>FastAPI</span><span>Next.js</span><span>Transformers</span><span>AES-256</span><span>TypeScript</span></div>
+        <a class="visit" href="https://github.com/VijayaY836/Emotion-Cipher" target="_blank" rel="noopener">View the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloom-section" data-flower="dahlia">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#E0596E"></i>Amber light · 6:35 pm</div>
+        <h2>StudyBase</h2>
+        <p>A full-stack student productivity platform — auth, courses, notes and
+        an AI Focus Advisor that plans study sessions for you. Built at a
+        hackathon, still alive on the web because people actually use it.</p>
+        <div class="tags"><span>React</span><span>Flask</span><span>Supabase</span><span>OpenRouter</span></div>
+        <a class="visit" href="https://study-base-nine.vercel.app" target="_blank" rel="noopener">Visit it live →</a>
+        <a class="visit" style="margin-left:1.4rem" href="https://github.com/VijayaY836/Study-Base" target="_blank" rel="noopener">Code →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloom-section" data-flower="cosmos">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#F2A0B6"></i>First blush · 7:05 pm</div>
+        <h2>Cultura</h2>
+        <p>A living map of Northeast India’s eight states — traditions, languages
+        and festivals on interactive maps, an AI storytelling companion
+        (“Moushumi Aaita”) that recommends folktales by sentiment, multilingual
+        translation via BHASHINI, and a handloom marketplace supporting
+        real artisans.</p>
+        <div class="tags"><span>React</span><span>Leaflet</span><span>BHASHINI API</span><span>Google OAuth</span><span>AI</span></div>
+        <a class="visit" href="https://github.com/VijayaY836/Cultura-AI" target="_blank" rel="noopener">View the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloom-section" data-flower="iris">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#9C7FE0"></i>Violet hour · 7:35 pm</div>
+        <h2>Inkwell</h2>
+        <p>A real-time collaborative whiteboard. Everyone draws on the same
+        canvas at once, strokes syncing live over WebSockets — no accounts,
+        no friction, just a shared surface.</p>
+        <div class="tags"><span>Socket.IO</span><span>Canvas 2D</span><span>Express</span><span>Render</span></div>
+        <a class="visit" href="https://github.com/VijayaY836/Collaborative-Whiteboard" target="_blank" rel="noopener">View the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloom-section" data-flower="moonflower">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#F5F1E6"></i>Lamplight · 8:00 pm</div>
+        <h2>Slate</h2>
+        <p>A programming language I built from nothing — lexer, parser, AST and
+        a tree-walking interpreter, written in Python. Arrays, functions,
+        control flow; a small language that actually runs.</p>
+        <div class="tags"><span>Python</span><span>Interpreters</span><span>Parsing</span><span>ASTs</span></div>
+        <a class="visit" href="https://github.com/VijayaY836/Slate-lang" target="_blank" rel="noopener">View the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bloom-section" data-flower="lily">
+    <div class="pinwrap">
+      <div class="stage" aria-hidden="true"></div>
+      <div class="card">
+        <div class="eyebrow"><i style="background:#7E93E0"></i>Blue hour · 8:20 pm</div>
+        <h2>Sourcerer</h2>
+        <p>Ask questions, get answers with receipts. A retrieval-augmented
+        document QA app — drop in your PDFs and it cites its sources back
+        to you, chunk by chunk.</p>
+        <div class="tags"><span>FastAPI</span><span>ChromaDB</span><span>fastembed</span><span>RAG</span></div>
+        <a class="visit" href="https://github.com/VijayaY836/Sourceror" target="_blank" rel="noopener">View the code →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= EXPERIENCE ================= -->
+  <section class="quiet">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Lamplight fading · 8:40 pm</div>
+      <h2>Along the path</h2>
+      <p>Places I’ve tended things that weren’t mine alone.</p>
+    </div>
+    <div class="row-list">
+      <div class="row reveal">
+        <div class="what">
+          <strong>1M1B Green Skills Academy</strong>
+          <span>Green Intern</span>
+          <p>AI and data analytics on real climate datasets — building
+          data-driven intelligence for energy, water and waste optimization.</p>
+        </div>
+        <div class="when">Dec 2025 — Feb 2026</div>
+      </div>
+      <div class="row reveal">
+        <div class="what">
+          <strong>GSSoC</strong>
+          <span>Campus Ambassador</span>
+          <p>The campus point of contact for one of India’s largest open-source
+          programs — mentorship, coordination, and keeping engagement high.</p>
+        </div>
+        <div class="when">Oct — Dec 2025</div>
+      </div>
+      <div class="row reveal">
+        <div class="what">
+          <strong>Viswam AI</strong>
+          <span>TechLead Intern</span>
+          <p>AI data-corpus development and collaborative machine learning
+          projects aimed at real-world problems.</p>
+        </div>
+        <div class="when">Jan — Sep 2025</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= AWARDS ================= -->
+  <section class="quiet">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Gathering dark · 8:55 pm</div>
+      <h2>Gathered on the walk</h2>
+      <p>Some ribbons picked up along the way.</p>
+    </div>
+    <div class="award-grid">
+      <div class="award reveal">
+        <div class="medal">Top 10 · National</div>
+        <strong>Drishti-Ne Hackathon — IIM Shillong</strong>
+        <span>Top-10 finalist team among 1,866+ registrations in an AI
+        innovation challenge · Feb 2026</span>
+      </div>
+      <div class="award reveal">
+        <div class="medal">First Prize</div>
+        <strong>Gen-AI Domain — CodeStorm 2026</strong>
+        <span>Hackathon win at Narsimha Reddy Engineering College · Jan 2026</span>
+      </div>
+      <div class="award reveal">
+        <div class="medal">First Prize</div>
+        <strong>WebNova — Convergence 2025</strong>
+        <span>Web development, Institute of Aeronautical Engineering · Nov 2025</span>
+      </div>
+      <div class="award reveal">
+        <div class="medal">Second Prize</div>
+        <strong>BuildSphere — Synergia 2026</strong>
+        <span>Website development competition, BVRIT Hyderabad College of Engineering for Women · Apr 2026</span>
+      </div>
+      <div class="award reveal">
+        <div class="medal">First Prize</div>
+        <strong>Blind Coding — Engineer’s Day</strong>
+        <span>Coding without a screen, BVRIT Hyderabad College of Engineering for Women · Sep 2024</span>
+      </div>
+      <div class="award reveal">
+        <div class="medal">First Prize</div>
+        <strong>Naveena 2k25 — Idea Presentation</strong>
+        <span>Innovation Day, BVRIT Hyderabad College of Engineering for Women · Oct 2025</span>
+      </div>
+    </div>
+    <div class="more-note reveal">…and a few more ribbons pressed between the pages.</div>
+  </section>
+
+  <!-- ================= PATENTS ================= -->
+  <section class="quiet">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Moonrise · 9:05 pm</div>
+      <h2>Two seeds, patent-filed</h2>
+      <p>Ideas planted deep enough to file with the patent office.</p>
+    </div>
+    <div class="patent-grid">
+      <div class="patent reveal">
+        <div class="num">202541055673 A</div>
+        <strong>Ultrasonication-Assisted Synthesis of Soft Magnetic NiFe₂O₄ Nanoparticles</strong>
+        <p>A synthesis-driven route to tunable magnetic nanomaterials — finer
+        particle dispersion and smaller crystallites, suited to biomedical and
+        high-frequency electronic applications.</p>
+      </div>
+      <div class="patent reveal">
+        <div class="num">202541056107 A</div>
+        <strong>Smartwatch-Based Adaptive Posture Monitoring &amp; Feedback System</strong>
+        <p>Posture correction that lives entirely on the watch — on-device
+        machine learning, adaptive haptic feedback, personalized incremental
+        learning, and behavioral-biometric user identification. Fully offline.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FINALE ================= -->
+  <footer class="finale">
+    <div class="eyebrow">9:12 pm · the fireflies are out</div>
+    <h2>Whatever you carried in<br/>should feel lighter now.</h2>
+    <p>The garden is always open, and I’m always tending to something new.
+    If a bloom here caught your eye, come say hello.</p>
+    <div class="links">
+      <a href="https://github.com/VijayaY836" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=vijayayeditha8537@gmail.com" target="_blank">Email</a>
+      <a href="Resume.pdf" download="Vijaya-Yeditha-Resume.pdf">Resume</a>
+    </div>
+    <div class="signoff">grown &amp; tended by Vijaya Bhaskara Lakshmi Yeditha</div>
+  </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lenis/1.1.13/lenis.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  gsap.registerPlugin(ScrollTrigger);
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------------- smooth scroll ---------------- */
+  if (window.Lenis && !reduced){
+    const lenis = new Lenis({ lerp: 0.09 });
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time)=>{ lenis.raf(time*1000); });
+    gsap.ticker.lagSmoothing(0);
+  }
+
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs){
+    const n = document.createElementNS(NS, name);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+  const rand = (a,b)=>a+Math.random()*(b-a);
+  const pick = (arr)=>arr[Math.floor(Math.random()*arr.length)];
+
+  /* ================================================================
+     PLANT THE GARDEN — three procedural parallax beds
+     ================================================================ */
+  const HEADS = ['#F79A2E','#EE93AC','#E0596E','#9C7FE0','#F2D470','#F5F1E6','#7E93E0'];
+  const CORES = {'#F79A2E':'#8E3F1E','#EE93AC':'#F0C75E','#E0596E':'#7E2A38',
+                 '#9C7FE0':'#F0C75E','#F2D470':'#8E6B1E','#F5F1E6':'#D8DE8F','#7E93E0':'#F2D470'};
+
+  function plantFar(){
+    // rolling hedge line + a couple of round trees
+    const svg = el('svg',{viewBox:'0 0 1440 240',preserveAspectRatio:'none'});
+    let d = 'M0,150 ';
+    let x = 0;
+    while (x < 1440){
+      const w = rand(90,190), h = rand(95,145);
+      d += `Q${x+w/2},${h} ${x+w},${rand(130,165)} `;
+      x += w;
+    }
+    d += 'L1440,240 L0,240 Z';
+    svg.appendChild(el('path',{class:'far-fill', d}));
+    // trees
+    [rand(140,320), rand(620,820), rand(1080,1300)].forEach((tx)=>{
+      const th = rand(70,100);
+      svg.appendChild(el('rect',{class:'far-fill', x:tx-4, y:150-th, width:8, height:th}));
+      svg.appendChild(el('ellipse',{class:'far-fill', cx:tx, cy:150-th, rx:rand(34,52), ry:rand(28,40)}));
+      svg.appendChild(el('ellipse',{class:'far-fill', cx:tx-24, cy:150-th+16, rx:rand(20,30), ry:rand(16,24)}));
+      svg.appendChild(el('ellipse',{class:'far-fill', cx:tx+24, cy:150-th+14, rx:rand(20,30), ry:rand(16,24)}));
+    });
+    document.getElementById('gfar').appendChild(svg);
+  }
+
+  function plantMid(){
+    // bushes studded with small flower heads
+    const svg = el('svg',{viewBox:'0 0 1440 200',preserveAspectRatio:'none'});
+    const base = el('path',{class:'mid-fill', d:'M0,150 C240,128 480,162 720,142 C960,122 1200,158 1440,138 L1440,200 L0,200 Z'});
+    svg.appendChild(base);
+    let x = rand(-30,20);
+    while (x < 1460){
+      const cy = rand(140,175), rx = rand(46,86), ry = rand(30,52);
+      svg.appendChild(el('ellipse',{class:'mid-fill', cx:x, cy, rx, ry}));
+      svg.appendChild(el('ellipse',{class:'mid-fill', cx:x+rx*0.55, cy:cy+8, rx:rx*0.7, ry:ry*0.75}));
+      svg.appendChild(el('ellipse',{class:'mid-fill', cx:x-rx*0.5, cy:cy+10, rx:rx*0.65, ry:ry*0.7}));
+      // flower heads sprinkled on the bush crown
+      const nHeads = Math.round(rand(3,7));
+      for (let i=0;i<nHeads;i++){
+        const hx = x + rand(-rx*0.8, rx*0.8);
+        const hy = cy - ry + rand(-6, 14);
+        const c = pick(HEADS);
+        svg.appendChild(el('circle',{cx:hx, cy:hy, r:rand(3.4,6), fill:c, opacity:0.95}));
+      }
+      x += rx*1.5 + rand(10,50);
+    }
+    document.getElementById('gmid').appendChild(svg);
+  }
+
+  function plantNear(){
+    // tall grass + big garden flowers, denser at the edges so cards stay clear
+    const svg = el('svg',{viewBox:'0 0 1440 170',preserveAspectRatio:'none'});
+    svg.appendChild(el('path',{class:'near-fill', d:'M0,140 C300,120 600,150 900,132 C1140,118 1320,146 1440,130 L1440,170 L0,170 Z'}));
+    // grass blades
+    for (let i=0;i<110;i++){
+      const gx = rand(0,1440), h = rand(24,62), lean = rand(-10,10);
+      svg.appendChild(el('path',{class:'near-fill',
+        d:`M${gx},170 C${gx-5},${170-h*0.55} ${gx+lean-3},${170-h} ${gx+lean},${170-h}`+
+          ` C${gx+lean+3},${170-h*0.8} ${gx+6},${170-h*0.25} ${gx+7},170 Z`}));
+    }
+    // tall flowers — heavier at the edges
+    const spots = [];
+    for (let i=0;i<15;i++) spots.push(rand(0,330));
+    for (let i=0;i<15;i++) spots.push(rand(1110,1440));
+    for (let i=0;i<7;i++)  spots.push(rand(360,1080));
+    spots.forEach((fx)=>{
+      const h = rand(55,120), sway = rand(-14,14);
+      const topX = fx+sway, topY = 168-h;
+      svg.appendChild(el('path',{class:'near-stem', fill:'none','stroke-width':3.4,'stroke-linecap':'round',
+        d:`M${fx},170 C${fx-3},${170-h*0.4} ${topX+2},${170-h*0.75} ${topX},${topY}`}));
+      // leaf
+      svg.appendChild(el('path',{class:'near-fill',
+        d:`M${fx-1},${170-h*0.42} C${fx-16},${170-h*0.48} ${fx-24},${170-h*0.38} ${fx-28},${170-h*0.28}`+
+          ` C${fx-16},${170-h*0.26} ${fx-6},${170-h*0.32} ${fx-1},${170-h*0.42} Z`}));
+      const c = pick(HEADS), r = rand(6.5,11);
+      // simple petal ring: 6 petals + core
+      for (let i=0;i<6;i++){
+        const a = i*Math.PI/3;
+        svg.appendChild(el('circle',{cx:topX+Math.cos(a)*r*0.9, cy:topY+Math.sin(a)*r*0.9, r:r*0.62, fill:c, opacity:0.96}));
+      }
+      svg.appendChild(el('circle',{cx:topX, cy:topY, r:r*0.5, fill:CORES[c]||'#F0C75E'}));
+    });
+    document.getElementById('gnear').appendChild(svg);
+  }
+
+  plantFar(); plantMid(); plantNear();
+
+  /* ================================================================
+     BLOOM FLOWERS (the six project flowers)
+     ================================================================ */
+  const SPECIES = {
+    marigold:  { outer:{n:12,len:118,w:44,fill:'#F79A2E'}, inner:{n:10,len:74,w:34,fill:'#FFC961'}, core:'#8E3F1E', stem:'#2E3A26' },
+    dahlia:    { outer:{n:14,len:112,w:38,fill:'#D9506A'}, inner:{n:12,len:72,w:30,fill:'#F2848F'}, core:'#7E2A38', stem:'#2C3626' },
+    cosmos:    { outer:{n:8, len:126,w:52,fill:'#EE93AC'}, inner:{n:8, len:80,w:40,fill:'#F8BECB'}, core:'#F0C75E', stem:'#2C3626' },
+    iris:      { outer:{n:6, len:132,w:56,fill:'#7E63BF'}, inner:{n:6, len:84,w:40,fill:'#A98FE0'}, core:'#F0C75E', stem:'#28301F' },
+    moonflower:{ outer:{n:9, len:122,w:48,fill:'#EFE9DA'}, inner:{n:7, len:76,w:36,fill:'#FBF8EF'}, core:'#D8DE8F', stem:'#232B1D' },
+    lily:      { outer:{n:10,len:128,w:46,fill:'#5F78CF'}, inner:{n:8, len:82,w:36,fill:'#92A6E8'}, core:'#F2D470', stem:'#1F2740' }
+  };
+
+  function petalPath(len, w){
+    return `M0 0 C ${-w} ${-len*0.35}, ${-w*0.55} ${-len*0.9}, 0 ${-len}` +
+           ` C ${w*0.55} ${-len*0.9}, ${w} ${-len*0.35}, 0 0 Z`;
+  }
+  function buildFlower(container, cfg){
+    const svg = el('svg',{viewBox:'0 0 400 580'});
+    const stem = el('path',{class:'stemline',
+      d:'M200 566 C 193 480, 209 396, 200 316 C 196 268, 200 242, 200 220',
+      stroke:cfg.stem,'stroke-width':7});
+    svg.appendChild(stem);
+    const leafL = el('path',{class:'leaf', fill:cfg.stem,
+      d:'M199 420 C 160 408, 132 418, 116 446 C 148 452, 182 442, 199 420 Z'});
+    const leafR = el('path',{class:'leaf', fill:cfg.stem,
+      d:'M201 358 C 240 348, 268 356, 284 382 C 252 390, 218 380, 201 358 Z'});
+    svg.appendChild(leafL); svg.appendChild(leafR);
+    const head = el('g',{transform:'translate(200 214)'});
+    const petals = { outer:[], inner:[] };
+    ['outer','inner'].forEach((layer)=>{
+      const L = cfg[layer];
+      const offset = layer==='inner' ? (360/L.n)/2 : 0;
+      for (let i=0;i<L.n;i++){
+        const g = el('g',{transform:`rotate(${offset + i*360/L.n})`});
+        const p = el('path',{class:'petal', d:petalPath(L.len,L.w), fill:L.fill,
+                             opacity: layer==='outer' ? 0.96 : 1});
+        g.appendChild(p); head.appendChild(g);
+        petals[layer].push(p);
+      }
+    });
+    const core = el('circle',{class:'core', r:27, fill:cfg.core});
+    head.appendChild(core);
+    svg.appendChild(head);
+    container.appendChild(svg);
+    return { stem, leaves:[leafL,leafR], outer:petals.outer, inner:petals.inner, core, head };
+  }
+
+  document.querySelectorAll('.bloom-section').forEach((section)=>{
+    const cfg = SPECIES[section.dataset.flower];
+    const stage = section.querySelector('.stage');
+    const card  = section.querySelector('.card');
+    const f = buildFlower(stage, cfg);
+
+    const stemLen = f.stem.getTotalLength();
+    gsap.set(f.stem, {strokeDasharray:stemLen, strokeDashoffset:stemLen});
+    gsap.set(f.leaves, {scale:0, transformOrigin:'50% 50%'});
+    gsap.set([...f.outer, ...f.inner], {scale:0, transformOrigin:'50% 100%'});
+    gsap.set(f.core, {scale:0, transformOrigin:'50% 50%'});
+    const cardEls = card.children;
+    gsap.set(cardEls, {y:36, opacity:0});
+
+    const tl = gsap.timeline({
+      scrollTrigger:{trigger:section, start:'top top', end:'bottom bottom', scrub:1},
+      defaults:{ease:'none'}
+    });
+    tl.to(f.stem,  {strokeDashoffset:0, duration:0.24}, 0.02)
+      .to(f.leaves,{scale:1, stagger:0.04, duration:0.10, ease:'power2.out'}, 0.16)
+      .to(f.outer, {scale:1, duration:0.34, ease:'back.out(1.5)',
+                    stagger:{each:0.018, from:'random'}}, 0.24)
+      .to(f.inner, {scale:1, duration:0.28, ease:'back.out(1.6)',
+                    stagger:{each:0.02, from:'random'}}, 0.36)
+      .to(f.core,  {scale:1, duration:0.12, ease:'back.out(2)'}, 0.48)
+      .to(cardEls, {y:0, opacity:1, duration:0.26, stagger:0.05, ease:'power2.out'}, 0.5)
+      .to({}, {duration:0.14});
+
+    if (!reduced){
+      gsap.to(f.head, {rotation:2.2, transformOrigin:'50% 100%',
+        yoyo:true, repeat:-1, duration:3.4, ease:'sine.inOut'});
+    }
+  });
+
+  /* ---------------- quiet-section reveals ---------------- */
+  document.querySelectorAll('.reveal').forEach((node)=>{
+    gsap.fromTo(node, {y:34, opacity:0},
+      {y:0, opacity:1, duration:0.9, ease:'power2.out',
+       scrollTrigger:{trigger:node, start:'top 82%', toggleActions:'play none none reverse'}});
+  });
+
+  /* ================================================================
+     THE SUNSET — sky, sun, foliage colors, veil, clock
+     ================================================================ */
+  const SKYKEYS = [
+    {p:0.00, top:'#FFE3B3', mid:'#FFBE85', hor:'#FF9E6B'},
+    {p:0.30, top:'#F2A3AE', mid:'#EC9490', hor:'#F5A879'},
+    {p:0.60, top:'#6E5CA8', mid:'#8E6FAE', hor:'#D9838E'},
+    {p:1.00, top:'#101736', mid:'#233060', hor:'#3E3468'}
+  ];
+  function hexToRgb(h){ h=h.slice(1); return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]; }
+  const lerp = (a,b,t)=>a+(b-a)*t;
+  function mixHex(h1,h2,t){
+    const a=hexToRgb(h1), b=hexToRgb(h2);
+    return `rgb(${Math.round(lerp(a[0],b[0],t))},${Math.round(lerp(a[1],b[1],t))},${Math.round(lerp(a[2],b[2],t))})`;
+  }
+  function skyAt(p){
+    let i=0;
+    while (i<SKYKEYS.length-2 && p>SKYKEYS[i+1].p) i++;
+    const a=SKYKEYS[i], b=SKYKEYS[i+1];
+    const t=Math.min(1,Math.max(0,(p-a.p)/(b.p-a.p)));
+    return {top:mixHex(a.top,b.top,t), mid:mixHex(a.mid,b.mid,t), hor:mixHex(a.hor,b.hor,t)};
+  }
+
+  const root = document.documentElement.style;
+  const sunEl = document.querySelector('.sun');
+  const veil = document.getElementById('veil');
+  const clockEl = document.getElementById('clock');
+  const layers = {
+    far:  document.getElementById('gfar'),
+    mid:  document.getElementById('gmid'),
+    near: document.getElementById('gnear')
+  };
+  const START_MIN = 17*60+47, END_MIN = 21*60+12;
+
+  let progress = 0;
+  function applyProgress(p){
+    progress = p;
+    const s = skyAt(p);
+    root.setProperty('--sky-top', s.top);
+    root.setProperty('--sky-mid', s.mid);
+    root.setProperty('--sky-hor', s.hor);
+    // foliage: warm greens -> deep indigo-greens as night falls
+    root.setProperty('--fol-far',  mixHex('#5E7A46', '#252D4A', p));
+    root.setProperty('--fol-mid',  mixHex('#49653A', '#1D2540', p));
+    root.setProperty('--fol-near', mixHex('#365020', '#141B30', p));
+    // the night settles over the beds
+    veil.style.opacity = (p*0.62).toFixed(3);
+    // sun sinks and fades
+    const sunP = Math.min(1, p/0.72);
+    sunEl.style.top = (52 + sunP*54) + 'vh';
+    sunEl.style.opacity = p < 0.62 ? 1 : Math.max(0, 1-(p-0.62)/0.13);
+    // gentle parallax on the beds
+    layers.far.style.transform  = `translateY(${p*2.2}vh)`;
+    layers.mid.style.transform  = `translateY(${p*1.2}vh)`;
+    layers.near.style.transform = `translateY(${-p*1.4}vh)`;
+    // clock
+    const mins = Math.round(lerp(START_MIN, END_MIN, p));
+    let h = Math.floor(mins/60), m = mins%60;
+    const ampm = h>=12 ? 'PM' : 'AM'; h = ((h+11)%12)+1;
+    clockEl.textContent = `${h}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+  ScrollTrigger.create({start:0, end:'max', onUpdate:(self)=>applyProgress(self.progress)});
+  applyProgress(0);
+
+  /* ================================================================
+     LIVING AIR — drifting petals early, stars & fireflies late
+     ================================================================ */
+  const cvs = document.getElementById('air');
+  const ctx = cvs.getContext('2d');
+  let W=0, H=0, DPR=Math.min(2, window.devicePixelRatio||1);
+  const stars = [], flies = [], petals = [];
+  const PETAL_COLORS = ['rgba(238,147,172,','rgba(247,154,46,','rgba(242,212,112,','rgba(224,89,110,'];
+
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    cvs.width = W*DPR; cvs.height = H*DPR;
+    cvs.style.width = W+'px'; cvs.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  window.addEventListener('resize', resize); resize();
+
+  for (let i=0;i<110;i++){
+    stars.push({x:Math.random(), y:Math.random()*0.62, r:Math.random()*1.1+0.3,
+                tw:Math.random()*Math.PI*2, sp:0.4+Math.random()*1.2});
+  }
+  function spawnFly(){
+    flies.push({x:Math.random()*W, y:H*(0.35+Math.random()*0.6),
+      a:Math.random()*Math.PI*2, sp:0.14+Math.random()*0.22,
+      ph:Math.random()*Math.PI*2, tw:0.6+Math.random()*1.4,
+      r:1.4+Math.random()*1.6});
+  }
+  function spawnPetal(top){
+    petals.push({
+      x:Math.random()*W, y: top ? -12 : Math.random()*H,
+      vy:0.35+Math.random()*0.5, sw:0.5+Math.random()*1.1,
+      ph:Math.random()*Math.PI*2, rot:Math.random()*Math.PI*2,
+      vr:(Math.random()-0.5)*0.02, s:3.2+Math.random()*3.4,
+      c:pick(PETAL_COLORS)
+    });
+  }
+  for (let i=0;i<14;i++) spawnPetal(false);
+
+  let last = performance.now();
+  function frame(now){
+    const dt = Math.min(50, now-last); last = now;
+    ctx.clearRect(0,0,W,H);
+
+    /* drifting petals — plentiful in golden light, gone by nightfall */
+    const petalTarget = progress < 0.5 ? Math.round(16*(1-progress/0.5)) : 0;
+    while (petals.length < petalTarget) spawnPetal(true);
+    for (let i=petals.length-1; i>=0; i--){
+      const pt = petals[i];
+      if (!reduced){
+        pt.y += pt.vy*dt*0.06;
+        pt.x += Math.sin(now*0.0008*pt.sw + pt.ph)*0.5;
+        pt.rot += pt.vr*dt*0.06;
+      }
+      if (pt.y > H+14 || petals.length > petalTarget){
+        petals.splice(i,1);
+        if (petals.length < petalTarget) spawnPetal(true);
+        continue;
+      }
+      ctx.save();
+      ctx.translate(pt.x, pt.y);
+      ctx.rotate(pt.rot);
+      ctx.fillStyle = pt.c + '0.8)';
+      ctx.beginPath();
+      ctx.ellipse(0, 0, pt.s, pt.s*0.55, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* stars fade in after the violet hour */
+    const starA = Math.max(0, Math.min(1, (progress-0.58)/0.3));
+    if (starA>0){
+      ctx.fillStyle = '#FFF6E8';
+      for (const s of stars){
+        if (!reduced) s.tw += dt*0.001*s.sp;
+        ctx.globalAlpha = starA*(0.35+0.65*Math.abs(Math.sin(s.tw)));
+        ctx.beginPath();
+        ctx.arc(s.x*W, s.y*H, s.r, 0, Math.PI*2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    /* firefly population follows the dark */
+    const target = progress<0.42 ? 0 : Math.floor(((progress-0.42)/0.58)*70);
+    while (flies.length < target) spawnFly();
+    while (flies.length > target) flies.pop();
+
+    for (const f of flies){
+      if (!reduced){
+        f.a += (Math.random()-0.5)*0.25;
+        f.x += Math.cos(f.a)*f.sp*dt*0.06;
+        f.y += Math.sin(f.a)*f.sp*dt*0.06 + Math.sin(now*0.001+f.ph)*0.08;
+        if (f.x<-20) f.x=W+20; if (f.x>W+20) f.x=-20;
+        if (f.y<H*0.25) f.y=H*0.25; if (f.y>H+20) f.y=H*0.4;
+        f.ph += dt*0.0004;
+      }
+      const glow = 0.25+0.75*Math.abs(Math.sin(now*0.001*f.tw+f.ph));
+      const g = ctx.createRadialGradient(f.x,f.y,0,f.x,f.y,f.r*7);
+      g.addColorStop(0, `rgba(255,238,160,${0.85*glow})`);
+      g.addColorStop(0.35, `rgba(255,222,120,${0.32*glow})`);
+      g.addColorStop(1, 'rgba(255,222,120,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(f.x,f.y,f.r*7,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle = `rgba(255,246,210,${0.9*glow})`;
+      ctx.beginPath(); ctx.arc(f.x,f.y,f.r,0,Math.PI*2); ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  /* ---------------- hero fade ---------------- */
+  gsap.to('.hero', {
+    opacity:0, y:-40, ease:'none',
+    scrollTrigger:{trigger:'.hero', start:'top top', end:'bottom 40%', scrub:true}
+  });
+})();
+</script>
+</body>
+</html>
