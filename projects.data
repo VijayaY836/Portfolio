@@ -1,0 +1,134 @@
+/**
+ * projects-data.js
+ * ------------------------------------------------------------------
+ * Single source of truth for the six portfolio projects.
+ *
+ * WHY THIS FILE EXISTS BUT ISN'T WIRED IN (YET):
+ * garden.html, galaxy.html, and formal.html each render these projects
+ * with completely different markup — SVG-mounted specimens in the Garden,
+ * canvas star nodes in the Atlas, editorial case-study cards in the Studio.
+ * Pulling data from one shared file only pays off once each page's render
+ * function is separated from its content, which means touching three
+ * large, working, hand-tuned files at once — real risk of breaking a
+ * visual effect for a "nice to have."
+ *
+ * The safer path: keep this file as the single place you edit project
+ * facts (title, years, tags, description), and update each HTML file's
+ * hard-coded copy to match it by hand for now. When you're ready to
+ * actually wire it in, each page just needs a small render function
+ * that maps over PROJECTS and builds its existing DOM/SVG structure —
+ * happy to build that with you when you want to take it on.
+ * ------------------------------------------------------------------
+ */
+
+const PROJECTS = [
+  {
+    id: "emotion-cipher",
+    title: "Emotion-Cipher",
+    role: "AI-powered secure communication platform",
+    year: 2026,
+    description:
+      "Encrypted messaging that reads the emotional tone of a message before it's sent. FastAPI and Next.js frame a DistilRoBERTa emotion-detection model against AES-256-CBC encryption.",
+    approach:
+      "Privacy-first pipeline end to end: PBKDF2-HMAC-SHA256 key derivation, zero-storage message processing, real-time emotion analytics in a TypeScript + Tailwind UI.",
+    tags: ["FastAPI", "Next.js", "HuggingFace Transformers", "PyTorch", "PyCryptodome", "TypeScript"],
+    highlights: ["AES-256 encryption", "Zero message storage"],
+    flagship: true
+  },
+  {
+    id: "cultura",
+    title: "Cultura",
+    role: "Interactive cultural heritage platform",
+    year: 2025,
+    description:
+      "Showcases traditions, languages, and festivals of Northeast India's eight states — interactive maps, cultural knowledge graphs, multilingual translation via the BHASHINI API.",
+    approach:
+      "Includes 'Moushumi Aaita,' an AI storytelling assistant recommending folktales by sentiment, an AI cultural chatbot, and a full handloom e-commerce marketplace for local artisans.",
+    tags: ["React", "Vite", "Leaflet", "BHASHINI API", "Web Speech API", "Google OAuth"],
+    highlights: ["8 states mapped", "Full marketplace"],
+    flagship: true
+  },
+  {
+    id: "happy-hive",
+    title: "Happy-Hive",
+    role: "Task & resource management platform",
+    year: 2025,
+    description:
+      "Productivity platform with intelligent priority/deadline handling, automatic event sync, and a color-coded calendar for at-a-glance progress tracking.",
+    approach:
+      "Full-stack React, Node.js, and MongoDB, paired with a wellness/reflection suite and real-time push notifications via VAPID.",
+    tags: ["React", "Node.js", "Express", "MongoDB", "JWT", "VAPID Web Push"],
+    highlights: ["Full-stack build", "Real-time sync"],
+    flagship: true
+  },
+  {
+    id: "studybase",
+    title: "StudyBase",
+    role: "Student productivity platform",
+    year: 2025,
+    description:
+      "Full student-productivity platform with an AI Focus Advisor, React + Flask + Supabase — deployed and live.",
+    approach:
+      "Built for scattered study tools living in three different apps. The Focus Advisor tab was the hackathon's innovation centerpiece.",
+    tags: ["React", "Flask", "Supabase"],
+    liveUrl: "https://study-base-nine.vercel.app",
+    flagship: false
+  },
+  {
+    id: "sourcerer",
+    title: "Sourcerer",
+    role: "RAG document Q&A engine",
+    year: 2025,
+    description:
+      "Single-service RAG document Q&A engine — FastAPI, fastembed, and ChromaDB, architected to avoid CORS entirely.",
+    approach:
+      "Single-origin FastAPI app serving both API and UI — a deliberate simplicity tradeoff removing a whole class of deployment/CORS bugs.",
+    tags: ["FastAPI", "ChromaDB", "RAG"],
+    flagship: false
+  },
+  {
+    id: "waypoint",
+    title: "Waypoint",
+    role: "Browser automation agent",
+    year: 2025,
+    description:
+      "Browser-automation agent with a live WebSocket dashboard — FastAPI, Playwright, containerized on Render using Playwright's official image.",
+    tags: ["Playwright", "WebSocket", "Docker"],
+    flagship: false
+  },
+  {
+    id: "slate",
+    title: "Slate",
+    role: "Programming language interpreter",
+    year: 2025,
+    description:
+      "A programming language built from scratch in Python — lexer, parser, AST, and a tree-walking evaluator, with arrays, functions, break/continue.",
+    tags: ["Python", "Interpreter", "AST"],
+    flagship: false
+  },
+  {
+    id: "semblance",
+    title: "Semblance",
+    role: "Client-side duplicate image detector",
+    year: 2025,
+    description:
+      "Client-side duplicate-image detection using perceptual pHash and FNV-1a signatures — runs entirely offline.",
+    tags: ["pHash", "Canvas", "Offline"],
+    flagship: false
+  },
+  {
+    id: "inkwell",
+    title: "Inkwell",
+    role: "Real-time collaborative whiteboard",
+    year: 2025,
+    description:
+      "Real-time collaborative whiteboard — Express + Socket.IO, Canvas 2D, multi-tool support, deployed to Render.",
+    tags: ["Express", "Socket.IO", "Canvas 2D"],
+    flagship: false
+  }
+];
+
+// Node/browser export compatibility
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = PROJECTS;
+}

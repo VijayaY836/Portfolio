@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vijaya Yeditha — Deep Dive</title>
+<meta name="description" content="Portfolio of Vijaya Bhaskara Lakshmi Yeditha — an ocean-descent experience. Scroll to descend.">
+<meta name="author" content="Vijaya Bhaskara Lakshmi Yeditha" />
+<link rel="canonical" href="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/ocean.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vijaya Yeditha — Deep Dive" />
+<meta property="og:description" content="An ocean-descent portfolio experience — scroll from the surface to the Challenger Deep." />
+<meta property="og:url" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/ocean.html" />
+<meta property="og:image" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vijaya Yeditha — Deep Dive" />
+<meta name="twitter:description" content="An ocean-descent portfolio experience — scroll from the surface to the Challenger Deep." />
+<meta name="twitter:image" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Sora:wght@200;300;400;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DEEP DIVE — design tokens
+   ============================================================ */
+:root{
+  --ink:#EAF6F8;
+  --ink-dim:rgba(234,246,248,.62);
+  --ink-faint:rgba(234,246,248,.38);
+  --bio:#59F2D8;          /* bioluminescent teal   */
+  --bio-violet:#8A7CFF;   /* deep violet accent    */
+  --cyan:#7FE9F2;         /* shallow water light   */
+  --last-light:#FFC87A;   /* the one warm glow, hadal only */
+  --glow:0.15;            /* JS-driven glow intensity 0..1 */
+  --card-line:rgba(127,233,242,.22);
+  --card-glow:rgba(89,242,216,.10);
+  --font-display:'Cormorant Garamond',Georgia,serif;
+  --font-body:'Sora',system-ui,sans-serif;
+  --font-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html,body{background:#02141f}
+body{
+  font-family:var(--font-body);
+  color:var(--ink);
+  font-weight:300;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+::selection{background:rgba(89,242,216,.28);color:#fff}
+
+/* Scroll architecture: a spacer defines scroll length; the world is
+   fixed and translated by an inertially-smoothed scroll value. */
+#spacer{position:relative;width:100%;pointer-events:none}
+#world{
+  position:fixed;inset:0 auto auto 0;width:100%;
+  will-change:transform;
+  z-index:2;
+}
+#ocean{position:fixed;inset:0;width:100%;height:100%;z-index:0;display:block}
+
+/* Reduced motion: world scrolls natively (JS flips this) */
+body.static-mode #world{position:relative;transform:none!important}
+body.static-mode #spacer{display:none}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.zone{position:relative;width:100%}
+.shell{max-width:1060px;margin:0 auto;padding:0 clamp(20px,5vw,64px)}
+
+.eyebrow{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.32em;font-weight:500;
+  color:var(--cyan);text-transform:uppercase;display:flex;
+  align-items:center;gap:14px;margin-bottom:26px;
+  text-shadow:0 0 14px rgba(127,233,242,.35);
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:currentColor;opacity:.7}
+.eyebrow .m{color:var(--bio);opacity:1;font-weight:600}
+
+h2.zone-title{
+  font-family:var(--font-display);font-weight:300;
+  font-size:clamp(34px,5vw,58px);line-height:1.05;letter-spacing:.01em;
+  margin-bottom:18px;
+}
+h2.zone-title em{font-style:italic;color:var(--cyan)}
+.zone-sub{max-width:56ch;color:var(--ink-dim);font-size:15px;line-height:1.85;font-weight:300}
+
+/* ============================================================
+   SURFACE — hero
+   ============================================================ */
+#surface{min-height:150svh;display:flex;align-items:flex-start;padding-top:22svh}
+.hero{position:relative;width:100%;text-align:center;animation:bob 7s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-14px) rotate(.25deg)}}
+.hero .eyebrow{justify-content:center}
+.hero .eyebrow::after{content:"";width:34px;height:1px;background:currentColor;opacity:.6}
+.hero-name{
+  font-family:var(--font-display);font-weight:400;
+  font-size:clamp(44px,8.2vw,108px);
+  line-height:.98;letter-spacing:.02em;text-transform:uppercase;
+  color:#F6FDFF;
+  filter:drop-shadow(0 6px 30px rgba(127,233,242,.35)) drop-shadow(0 2px 60px rgba(0,4,10,.6));
+}
+.hero-name em{font-style:italic;color:var(--cyan);font-weight:300;text-shadow:0 0 24px rgba(127,233,242,.4)}
+.hero-line{margin-top:22px;font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:clamp(17px,2.2vw,23px);color:rgba(217,251,255,.85)}
+.dive-cue{
+  margin-top:8svh;display:inline-flex;flex-direction:column;align-items:center;gap:12px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.4em;color:var(--ink-faint);
+  text-transform:uppercase;
+}
+.dive-cue svg{animation:sink 2.4s ease-in-out infinite}
+@keyframes sink{0%,100%{transform:translateY(0);opacity:.4}50%{transform:translateY(10px);opacity:1}}
+
+/* ============================================================
+   Cards — underwater glassmorphism, glow tuned per zone
+   ============================================================ */
+.card{
+  position:relative;border-radius:20px;
+  background:linear-gradient(160deg,rgba(160,235,248,.055),rgba(20,60,90,.10));
+  border:1px solid var(--card-line);
+  backdrop-filter:blur(14px) saturate(1.15);
+  -webkit-backdrop-filter:blur(14px) saturate(1.15);
+  padding:clamp(26px,4vw,44px);
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,.02) inset,
+    0 30px 80px rgba(0,8,16,.45),
+    0 0 60px var(--card-glow);
+}
+.card::before{ /* soft glow halo — blooms before the card resolves */
+  content:"";position:absolute;inset:-42px;border-radius:40px;z-index:-1;
+  background:radial-gradient(closest-side,var(--halo,rgba(89,242,216,.16)),transparent 70%);
+  opacity:0;transform:scale(.7);
+  transition:opacity 1.1s ease,transform 1.6s cubic-bezier(.22,1,.36,1);
+}
+.tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.26em;text-transform:uppercase;
+  color:var(--bio);padding:7px 12px;border:1px solid rgba(89,242,216,.28);
+  border-radius:999px;background:rgba(89,242,216,.05);
+}
+.tag .dot{width:5px;height:5px;border-radius:50%;background:var(--bio);
+  box-shadow:0 0 8px var(--bio);animation:pulse 3.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.5;box-shadow:0 0 4px var(--bio)}50%{opacity:1;box-shadow:0 0 12px var(--bio)}}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{
+  font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-dim);
+  border:1px solid rgba(234,246,248,.14);border-radius:999px;padding:6px 11px;
+  background:rgba(234,246,248,.03);white-space:nowrap;
+}
+
+/* ============================================================
+   Mermaid framing — shell corners, pearl edges, sea-lace
+   ============================================================ */
+.card::after{
+  content:"";position:absolute;inset:0;border-radius:20px;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26' fill='none' stroke='%237FE9F2' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M13 21l-6-8M13 21l-2.5-10M13 21l2.5-10M13 21l6-8'/%3E%3Cpath d='M6.4 12.8a8.2 8.2 0 0 1 13.2 0'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 26 26' fill='none' stroke='%237FE9F2' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M13 5l-6 8M13 5l-2.5 10M13 5l2.5 10M13 5l6 8'/%3E%3Cpath d='M6.4 13.2a8.2 8.2 0 0 0 13.2 0'/%3E%3C/svg%3E"),
+    radial-gradient(circle 4.5px at 8px 1px, rgba(127,233,242,.3) 3.6px, transparent 4.4px);
+  background-repeat:no-repeat,no-repeat,repeat-x;
+  background-position:15px 12px, calc(100% - 15px) calc(100% - 12px), 28px 100%;
+  background-size:22px 22px, 22px 22px, 16px 5px;
+  opacity:.55;
+  transition:opacity .6s ease;
+}
+.card:hover::after{opacity:.9}
+.card:hover{border-color:rgba(127,233,242,.42);
+  box-shadow:0 0 0 1px rgba(255,255,255,.03) inset,0 30px 80px rgba(0,8,16,.45),0 0 70px var(--card-glow),0 0 34px rgba(127,233,242,.12)}
+.last-light .card::after{filter:hue-rotate(155deg) saturate(.65);opacity:.45}
+
+h2.zone-title::after{
+  content:"";display:block;width:134px;height:7px;margin-top:16px;
+  background-image:radial-gradient(circle 2.6px at 3.4px 3.5px, rgba(234,246,248,.92) 56%, rgba(127,233,242,.4) 74%, transparent 80%);
+  background-size:13px 7px;background-repeat:repeat-x;
+  filter:drop-shadow(0 0 5px rgba(127,233,242,.5));
+  opacity:.85;
+}
+.hero .eyebrow .m,.eyebrow .m{text-shadow:0 0 10px rgba(89,242,216,.5)}
+
+/* ============================================================
+   SUNLIT — about + skills
+   ============================================================ */
+#sunlit{min-height:200svh;display:flex;align-items:center;padding:14svh 0}
+.about-grid{display:grid;grid-template-columns:1.25fr .9fr;gap:clamp(26px,4vw,54px);align-items:start}
+.about-copy p{color:var(--ink-dim);font-size:15.5px;line-height:1.95;margin-top:18px;max-width:58ch}
+.about-copy p strong{color:var(--ink);font-weight:400}
+.stat-row{display:flex;gap:clamp(18px,3.4vw,44px);margin-top:34px;flex-wrap:wrap}
+.stat b{display:block;font-family:var(--font-display);font-weight:300;font-size:clamp(30px,3.6vw,44px);
+  color:var(--cyan);line-height:1}
+.stat span{font-family:var(--font-mono);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink-faint);display:block;margin-top:8px}
+.skill-block{margin-top:22px}
+.skill-block:first-child{margin-top:0}
+.skill-block h4{font-family:var(--font-mono);font-weight:500;font-size:10.5px;letter-spacing:.3em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:4px}
+
+/* ============================================================
+   TWILIGHT — projects surfacing from the gloom
+   ============================================================ */
+#twilight{min-height:300svh;padding:16svh 0}
+.zone-head{margin-bottom:16svh}
+.project{max-width:760px;margin:0 auto 26svh}
+.project:nth-of-type(even){margin-left:auto;margin-right:0}
+.project:nth-of-type(odd){margin-left:0;margin-right:auto}
+.project .depth-mark{
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.3em;color:var(--ink-faint);
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;text-transform:uppercase;
+}
+.project .depth-mark::after{content:"";flex:1;height:1px;
+  background:linear-gradient(90deg,rgba(89,242,216,.35),transparent)}
+.project h3{font-family:var(--font-display);font-weight:400;font-size:clamp(28px,3.6vw,42px);
+  letter-spacing:.02em;line-height:1.08}
+.project h3 em{font-style:italic;font-weight:300;color:var(--bio)}
+.project .species{font-family:var(--font-display);font-style:italic;font-weight:300;
+  color:var(--ink-faint);font-size:15px;margin-top:6px}
+.project p{color:var(--ink-dim);font-size:14.5px;line-height:1.9;margin-top:16px}
+.project ul{margin:16px 0 0;padding:0;list-style:none}
+.project li{position:relative;padding-left:22px;color:var(--ink-dim);font-size:13.5px;line-height:1.8;margin-top:9px}
+.project li::before{content:"";position:absolute;left:0;top:.72em;width:6px;height:6px;border-radius:50%;
+  background:var(--bio);opacity:.55;box-shadow:0 0 8px var(--bio)}
+.project .proj-links{margin-top:18px;display:flex;gap:1.2rem;flex-wrap:wrap}
+.project .proj-links a{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--bio);border-bottom:1px solid rgba(89,242,216,.4);padding-bottom:3px;transition:border-color .3s ease,opacity .3s ease;
+}
+.project .proj-links a:hover{border-color:var(--bio);opacity:.85}
+
+/* ============================================================
+   ABYSSAL — field record, patents, podiums
+   ============================================================ */
+#abyssal{min-height:300svh;padding:16svh 0}
+#abyssal .card{--halo:rgba(138,124,255,.14)}
+#abyssal .tag{color:var(--bio-violet);border-color:rgba(138,124,255,.3);background:rgba(138,124,255,.06)}
+#abyssal .tag .dot{background:var(--bio-violet);box-shadow:0 0 8px var(--bio-violet)}
+.record{max-width:820px;margin:0 auto 20svh}
+.record .rows{margin-top:26px;border-top:1px solid rgba(138,124,255,.16)}
+.row{display:grid;grid-template-columns:150px 1fr;gap:20px;padding:22px 4px;
+  border-bottom:1px solid rgba(138,124,255,.16)}
+.row .when{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-faint);padding-top:5px}
+.row h4{font-weight:400;font-size:16px;letter-spacing:.02em}
+.row .org{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.14em;color:var(--bio-violet);
+  margin-top:4px;opacity:.85}
+.row p{color:var(--ink-dim);font-size:13.5px;line-height:1.8;margin-top:8px}
+
+.patents{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px}
+.patent h4{font-family:var(--font-display);font-weight:400;font-size:22px;line-height:1.25;margin-top:16px}
+.patent .pno{font-family:var(--font-mono);font-size:10px;letter-spacing:.22em;color:var(--ink-faint);margin-top:8px}
+.patent p{color:var(--ink-dim);font-size:13px;line-height:1.8;margin-top:12px}
+
+.podiums{margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:2px 34px}
+.podium{display:flex;gap:14px;padding:16px 2px;border-bottom:1px solid rgba(138,124,255,.13);align-items:baseline}
+.podium .place{font-family:var(--font-display);font-style:italic;font-weight:400;font-size:19px;
+  color:var(--bio);min-width:44px}
+.podium div h5{font-weight:400;font-size:13.5px;letter-spacing:.02em}
+.podium div span{display:block;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;
+  color:var(--ink-faint);margin-top:5px;text-transform:uppercase}
+
+/* ============================================================
+   HADAL — the last light
+   ============================================================ */
+#hadal{min-height:170svh;display:flex;align-items:center;padding:10svh 0 22svh}
+.last-light{max-width:640px;margin:0 auto;text-align:center;position:relative}
+.last-light .card{
+  --halo:rgba(255,200,122,.22);
+  border-color:rgba(255,200,122,.26);
+  background:linear-gradient(170deg,rgba(255,200,122,.05),rgba(30,18,6,.14));
+  box-shadow:0 0 0 1px rgba(255,220,170,.03) inset,0 30px 90px rgba(0,0,0,.6),0 0 90px rgba(255,200,122,.10);
+}
+.last-light .tag{color:var(--last-light);border-color:rgba(255,200,122,.34);background:rgba(255,200,122,.06)}
+.last-light .tag .dot{background:var(--last-light);box-shadow:0 0 9px var(--last-light)}
+.last-light h2{font-family:var(--font-display);font-weight:300;font-size:clamp(34px,5vw,54px);margin-top:20px}
+.last-light h2 em{font-style:italic;color:var(--last-light)}
+.last-light p{color:var(--ink-dim);font-size:14.5px;line-height:1.9;margin-top:14px}
+.contact-links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}
+.c-link{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--last-light);text-decoration:none;padding:13px 20px;border-radius:999px;
+  border:1px solid rgba(255,200,122,.32);background:rgba(255,200,122,.05);
+  transition:background .4s,box-shadow .4s,transform .4s;
+}
+.c-link:hover,.c-link:focus-visible{background:rgba(255,200,122,.13);
+  box-shadow:0 0 26px rgba(255,200,122,.22);transform:translateY(-2px)}
+.c-link.primary{background:rgba(255,200,122,.16);color:#1a0f02;background:var(--last-light);
+  border-color:transparent;font-weight:700}
+.c-link.primary:hover{box-shadow:0 0 40px rgba(255,200,122,.45)}
+.hadal-foot{margin-top:9svh;text-align:center;font-family:var(--font-mono);font-size:9.5px;
+  letter-spacing:.26em;text-transform:uppercase;color:rgba(234,246,248,.22);line-height:2.2}
+.resurface{display:inline-block;margin-top:16px;color:var(--ink-faint);text-decoration:none;
+  border:1px solid rgba(234,246,248,.14);border-radius:999px;padding:11px 18px;
+  font-size:9.5px;letter-spacing:.3em;transition:color .4s,border-color .4s;cursor:pointer;
+  background:none;font-family:var(--font-mono);text-transform:uppercase}
+.resurface:hover{color:var(--cyan);border-color:rgba(127,233,242,.4)}
+
+/* ============================================================
+   Reveal choreography — glow blooms first, shape resolves after
+   ============================================================ */
+.reveal{opacity:0;filter:blur(16px);transform:translateY(46px) scale(.985);
+  transition:opacity 1.3s ease .35s,filter 1.7s ease .35s,transform 1.5s cubic-bezier(.22,1,.36,1) .35s}
+.reveal.lit{opacity:1;filter:blur(0);transform:none}
+.reveal.lit .card::before,.reveal.lit.card::before{opacity:1;transform:scale(1)}
+.reveal.soft{transition-delay:.1s}
+
+/* ============================================================
+   Depth gauge — the instrument
+   ============================================================ */
+#gauge{
+  position:fixed;right:clamp(12px,2.4vw,34px);top:50%;transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;align-items:flex-end;gap:14px;
+  font-family:var(--font-mono);user-select:none;pointer-events:none;
+}
+.g-readout{text-align:right}
+.g-readout .g-k{font-size:8.5px;letter-spacing:.34em;color:var(--ink-faint);display:block}
+.g-readout .g-v{font-size:17px;font-weight:500;letter-spacing:.08em;color:var(--ink);
+  font-variant-numeric:tabular-nums;display:block;margin-top:3px;
+  text-shadow:0 0 14px rgba(127,233,242,.35)}
+.g-readout .g-v small{font-size:9px;letter-spacing:.2em;color:var(--ink-faint);font-weight:400}
+.g-tube-wrap{position:relative;display:flex;align-items:stretch;gap:8px}
+.g-ticks{position:relative;width:44px;height:44vh;min-height:280px}
+.g-tick{position:absolute;right:0;width:100%;display:flex;align-items:center;justify-content:flex-end;gap:7px;
+  transform:translateY(-50%)}
+.g-tick i{display:block;width:7px;height:1px;background:rgba(234,246,248,.4)}
+.g-tick.minor i{width:4px;background:rgba(234,246,248,.18)}
+.g-tick b{font-weight:400;font-size:8px;letter-spacing:.14em;color:var(--ink-faint)}
+.g-tube{
+  position:relative;width:9px;height:44vh;min-height:280px;border-radius:99px;
+  border:1px solid rgba(234,246,248,.22);
+  background:linear-gradient(180deg,rgba(234,246,248,.05),rgba(234,246,248,.01));
+  overflow:hidden;box-shadow:inset 0 0 8px rgba(0,0,0,.5);
+}
+.g-fill{
+  position:absolute;left:0;top:0;width:100%;height:var(--p,0%);
+  background:linear-gradient(180deg,#9ff1f8 0%,#4fd7e5 30%,#37c9c9 55%,#59f2d8 78%,#8a7cff 100%);
+  box-shadow:0 0 12px rgba(89,242,216,.55);
+}
+.g-fill::after{content:"";position:absolute;left:-2px;right:-2px;bottom:-1px;height:3px;
+  background:#dffcff;box-shadow:0 0 10px #7fe9f2,0 0 22px rgba(127,233,242,.7);border-radius:2px}
+.g-zone{
+  writing-mode:vertical-rl;font-size:9px;letter-spacing:.42em;text-transform:uppercase;
+  color:var(--bio);opacity:.85;text-shadow:0 0 12px rgba(89,242,216,.4);
+}
+.g-caption{font-size:8px;letter-spacing:.3em;color:rgba(234,246,248,.24);text-transform:uppercase}
+
+/* ============================================================
+   Zone nav — depth markers (left)
+   ============================================================ */
+#depthnav{
+  position:fixed;left:clamp(12px,2.4vw,34px);top:50%;transform:translateY(-50%);
+  z-index:40;display:flex;flex-direction:column;gap:0;font-family:var(--font-mono);
+}
+#depthnav .dn{
+  position:relative;display:flex;align-items:center;gap:12px;padding:13px 0;
+  background:none;border:none;cursor:pointer;color:var(--ink-faint);
+}
+#depthnav .dn i{
+  display:block;width:9px;height:9px;border-radius:50%;
+  border:1px solid rgba(234,246,248,.35);background:transparent;
+  transition:all .5s ease;
+}
+#depthnav .dn span{
+  font-size:9px;letter-spacing:.3em;text-transform:uppercase;opacity:0;
+  transform:translateX(-6px);transition:opacity .4s,transform .4s,color .4s;
+}
+#depthnav .dn:hover span{opacity:.8;transform:none}
+#depthnav .dn.active i{background:var(--bio);border-color:var(--bio);box-shadow:0 0 12px var(--bio)}
+#depthnav .dn.active span{opacity:1;transform:none;color:var(--bio)}
+#depthnav .dn:not(:last-child)::after{
+  content:"";position:absolute;left:4px;top:calc(50% + 10px);width:1px;height:16px;
+  background:linear-gradient(180deg,rgba(234,246,248,.22),rgba(234,246,248,.05));
+}
+
+/* ============================================================
+   Brand wordmark — matches Garden/Atlas's fixed top-left signature
+   ============================================================ */
+#brand{
+  position:fixed;top:1.5rem;left:clamp(14px,2.4vw,34px);z-index:40;
+  font-family:var(--font-display);font-style:italic;font-weight:300;
+  font-size:1.3rem;letter-spacing:-.005em;color:var(--ink);
+  text-decoration:none;text-shadow:0 0 16px rgba(89,242,216,.35);
+  transition:color .4s ease,text-shadow .4s ease;
+}
+#brand b{font-style:normal;font-weight:500}
+#brand:hover{color:var(--cyan);text-shadow:0 0 22px rgba(127,233,242,.55)}
+@media (max-width:820px){
+  #brand{top:1rem;font-size:1.1rem}
+}
+
+/* ============================================================
+   Sound toggle
+   ============================================================ */
+#soundToggle{
+  position:fixed;left:clamp(14px,2.4vw,34px);bottom:22px;z-index:40;
+  display:flex;align-items:center;gap:10px;background:rgba(4,16,26,.4);
+  border:1px solid rgba(234,246,248,.16);border-radius:999px;padding:10px 15px;
+  color:var(--ink-faint);cursor:pointer;font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.3em;text-transform:uppercase;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);transition:color .4s,border-color .4s;
+}
+#soundToggle:hover{color:var(--cyan);border-color:rgba(127,233,242,.4)}
+#soundToggle.on{color:var(--bio);border-color:rgba(89,242,216,.45)}
+#soundToggle svg{width:13px;height:13px;flex:none}
+#soundToggle .bars{display:none;gap:2px;align-items:flex-end;height:10px}
+#soundToggle.on .bars{display:inline-flex}
+#soundToggle.on .ic-off{display:none}
+#soundToggle .bars i{width:2px;background:currentColor;animation:eq 1.6s ease-in-out infinite}
+#soundToggle .bars i:nth-child(1){height:5px}
+#soundToggle .bars i:nth-child(2){height:9px;animation-delay:.3s}
+#soundToggle .bars i:nth-child(3){height:6px;animation-delay:.6s}
+@keyframes eq{0%,100%{transform:scaleY(.5)}50%{transform:scaleY(1)}}
+
+/* ============================================================
+   Back-to-crossroads button (site integration — added, nothing removed)
+   ============================================================ */
+#backBtn{
+  position:fixed;right:clamp(14px,2.4vw,34px);bottom:22px;z-index:40;
+  display:flex;align-items:center;gap:8px;background:rgba(4,16,26,.4);
+  border:1px solid rgba(234,246,248,.16);border-radius:999px;padding:10px 16px;
+  color:var(--ink-faint);font-family:var(--font-mono);font-size:9px;
+  letter-spacing:.3em;text-transform:uppercase;backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);transition:color .4s,border-color .4s;
+}
+#backBtn:hover{color:var(--cyan);border-color:rgba(127,233,242,.4)}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:980px){
+  .about-grid{grid-template-columns:1fr}
+  .patents{grid-template-columns:1fr}
+  .podiums{grid-template-columns:1fr}
+}
+@media (max-width:820px){
+  #depthnav{display:none}
+  #gauge{top:auto;bottom:0;right:0;left:0;transform:none;flex-direction:row;
+    align-items:center;justify-content:space-between;gap:10px;
+    padding:10px 16px 12px;background:linear-gradient(0deg,rgba(1,6,10,.78),transparent);
+  }
+  .g-tube-wrap{flex:1;align-items:center}
+  .g-ticks{display:none}
+  .g-tube{width:100%;height:4px;min-height:0;transform:none}
+  .g-fill{height:100%!important;width:var(--p,0%);top:0;left:0;
+    background:linear-gradient(90deg,#9ff1f8,#4fd7e5,#59f2d8,#8a7cff)}
+  .g-fill::after{left:auto;right:-1px;top:-2px;bottom:-2px;width:3px;height:auto}
+  .g-zone{writing-mode:horizontal-tb;letter-spacing:.3em;font-size:8px}
+  .g-caption{display:none}
+  .g-readout .g-v{font-size:13px}
+  .row{grid-template-columns:1fr;gap:4px}
+  #soundToggle{bottom:64px}
+  #backBtn{bottom:64px}
+  #surface{padding-top:18svh}
+}
+
+/* ============================================================
+   Reduced motion — kill motion, keep the descent of color
+   ============================================================ */
+@media (prefers-reduced-motion:reduce){
+  .hero{animation:none}
+  .dive-cue svg{animation:none}
+  .tag .dot{animation:none}
+  #soundToggle .bars i{animation:none}
+  .reveal{opacity:1;filter:none;transform:none;transition:none}
+  .card::before{opacity:1;transform:none;transition:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="ocean" aria-hidden="true"></canvas>
+
+<a id="brand" href="#surface"><b>Vijaya Y</b> · deep dive</a>
+
+<!-- ================= INSTRUMENTS (fixed, outside the world) ================= -->
+<nav id="depthnav" aria-label="Depth zones">
+  <button class="dn active" data-zone="0"><i></i><span>Surface</span></button>
+  <button class="dn" data-zone="1"><i></i><span>Sunlit</span></button>
+  <button class="dn" data-zone="2"><i></i><span>Twilight</span></button>
+  <button class="dn" data-zone="3"><i></i><span>Abyss</span></button>
+  <button class="dn" data-zone="4"><i></i><span>Trench</span></button>
+</nav>
+
+<aside id="gauge" aria-hidden="true">
+  <div class="g-readout">
+    <span class="g-k">DEPTH</span>
+    <span class="g-v" id="gDepth">00000 <small>M</small></span>
+  </div>
+  <div class="g-tube-wrap">
+    <div class="g-ticks" id="gTicks"></div>
+    <div class="g-tube"><div class="g-fill" id="gFill"></div></div>
+    <div class="g-zone" id="gZone">SURFACE</div>
+  </div>
+  <div class="g-readout">
+    <span class="g-k">PRESSURE</span>
+    <span class="g-v" id="gPressure">0001.0 <small>ATM</small></span>
+  </div>
+  <div class="g-caption">DSV · VBLY-01</div>
+</aside>
+
+<button id="soundToggle" aria-pressed="false" aria-label="Toggle ambient sound">
+  <svg class="ic-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><line x1="16" y1="9" x2="22" y2="15"/><line x1="22" y1="9" x2="16" y2="15"/></svg>
+  <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+  <span class="lbl">Ambience</span>
+</button>
+
+<a id="backBtn" href="roads.html">← Back to the crossroads</a>
+
+<!-- ================= THE WORLD ================= -->
+<div id="spacer"></div>
+<main id="world">
+
+  <!-- ─────────── SURFACE · 0 m ─────────── -->
+  <section class="zone" id="surface" data-zone-name="SURFACE">
+    <div class="shell hero">
+      <p class="eyebrow"><span class="m">0 M</span> · DIVE LOG · HYDERABAD, IN</p>
+      <h1 class="hero-name">Everything I've earned,<br><em>surfaced.</em></h1>
+      <p class="hero-line">I'm Vijaya, a B.Tech Undergraduate — the fuller record behind the projects: two patents filed, a run of hackathon wins, and the experience that built both.</p>
+      <div class="dive-cue">
+        <span>Scroll to descend</span>
+        <svg width="14" height="20" viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M7 1v16M2 12l5 6 5-6"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── SUNLIT · 0–200 m ─────────── -->
+  <section class="zone" id="sunlit" data-zone-name="EPIPELAGIC">
+    <div class="shell">
+      <div class="about-grid">
+        <div class="about-copy reveal">
+          <p class="eyebrow"><span class="m">−40 M</span> · EPIPELAGIC · WHERE LIGHT STILL REACHES</p>
+          <h2 class="zone-title">Everything here<br>runs on <em>light.</em></h2>
+          <p>I'm a Computer Science undergrad at <strong>BVRIT Hyderabad College of Engineering for Women</strong> (GPA 9.43), and I build software with cinematic intent — AI-powered platforms where the engineering is invisible and the experience is not.</p>
+          <p>Right now I'm a <strong>Green Skills intern at 1M1B</strong>, turning climate datasets into energy, water, and waste intelligence. Before that: <strong>TechLead Intern at Viswam AI</strong> building AI data corpora, and <strong>GSSoC Campus Ambassador</strong>. Two patents filed before turning twenty — one in nanomaterials, one in wearable ML.</p>
+          <div class="stat-row">
+            <div class="stat"><b>9.43</b><span>GPA</span></div>
+            <div class="stat"><b>2</b><span>Patents filed</span></div>
+            <div class="stat"><b>8</b><span>Podium finishes</span></div>
+            <div class="stat"><b>3</b><span>Languages spoken</span></div>
+          </div>
+        </div>
+        <div class="card reveal soft">
+          <span class="tag"><span class="dot"></span>Equipment check</span>
+          <div class="skill-block" style="margin-top:20px">
+            <h4>Languages</h4>
+            <div class="chips"><span class="chip">Python</span><span class="chip">Java</span><span class="chip">C</span><span class="chip">SQL</span></div>
+          </div>
+          <div class="skill-block">
+            <h4>Web &amp; Data</h4>
+            <div class="chips"><span class="chip">React</span><span class="chip">HTML &amp; CSS</span><span class="chip">DBMS</span><span class="chip">Node.js</span><span class="chip">FastAPI</span></div>
+          </div>
+          <div class="skill-block">
+            <h4>AI / ML</h4>
+            <div class="chips"><span class="chip">HuggingFace</span><span class="chip">PyTorch</span><span class="chip">Sentiment analysis</span></div>
+          </div>
+          <div class="skill-block">
+            <h4>Carried at all depths</h4>
+            <div class="chips"><span class="chip">Leadership</span><span class="chip">Teamwork</span><span class="chip">Critical thinking</span><span class="chip">Creativity</span><span class="chip">Communication</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── TWILIGHT · 200–1000 m ─────────── -->
+  <section class="zone" id="twilight" data-zone-name="MESOPELAGIC">
+    <div class="shell">
+      <div class="zone-head reveal">
+        <p class="eyebrow"><span class="m">−320 M</span> · MESOPELAGIC · THE TWILIGHT ZONE</p>
+        <h2 class="zone-title">Down here, things<br><em>make their own light.</em></h2>
+        <p class="zone-sub">Sunlight gives out around 200 metres. Below that, everything you see is bioluminescent — built, not borrowed. These are the nights that were won, not just attended.</p>
+      </div>
+
+      <article class="project card reveal" style="--halo:rgba(89,242,216,.18)">
+        <p class="depth-mark">−420 M · SPECIMEN 01</p>
+        <span class="tag"><span class="dot"></span>1st place · Gen-AI domain</span>
+        <h3 style="margin-top:16px">CodeStorm 2026 <em>— first light</em></h3>
+        <p class="species">Lanternfish — travels in shoals, lights the way for others</p>
+        <p>A national hackathon at Narsimha Reddy Engineering College, January 2026 — first place in the Gen-AI domain, built and shipped inside the event's own clock.</p>
+        <ul>
+          <li>Competed and placed first against teams building across every AI track, not just one narrow category.</li>
+          <li>₹5,000 prize — the kind of hackathon where the judging panel actually pushed back on the architecture.</li>
+        </ul>
+        <div class="chips"><span class="chip">Gen-AI</span><span class="chip">01/2026</span><span class="chip">₹5,000</span></div>
+      </article>
+
+      <article class="project card reveal" style="--halo:rgba(127,233,242,.16)">
+        <p class="depth-mark">−640 M · SPECIMEN 02</p>
+        <span class="tag"><span class="dot"></span>Top 10 of 1,866+</span>
+        <h3 style="margin-top:16px">Drishti-Ne <em>— the deep field</em></h3>
+        <p class="species">Comb jelly — near-invisible until it catches the light just right</p>
+        <p>An AI innovation challenge run by IIM Shillong, February 2026 — a national field of over 1,866 registrations, and a top-10 finish out of all of them.</p>
+        <ul>
+          <li>Business-school-run challenge — judged as much on viability and pitch as on the engineering underneath it.</li>
+          <li>The scale of the field is what makes this one count: 1,866+ teams entered, ten made the final cut.</li>
+        </ul>
+        <div class="chips"><span class="chip">AI Innovation</span><span class="chip">IIM Shillong</span><span class="chip">02/2026</span></div>
+      </article>
+
+      <article class="project card reveal" style="--halo:rgba(138,124,255,.2)">
+        <p class="depth-mark">−940 M · SPECIMEN 03 · FLAGSHIP</p>
+        <span class="tag"><span class="dot"></span>1st place</span>
+        <h3 style="margin-top:16px">WebNova <em>— Convergence 2025</em></h3>
+        <p class="species">Anglerfish — carries its own light where nothing else survives</p>
+        <p>A web development competition at the Institute of Aeronautical Engineering's Convergence 2025 — first place, built and defended live in front of a panel.</p>
+        <ul>
+          <li>Full build-and-defend format: ship it, then explain every decision under direct questioning.</li>
+          <li>₹5,000 prize, and the first of what became a run of first-place finishes through 2025–26.</li>
+        </ul>
+        <div class="chips"><span class="chip">Web Dev</span><span class="chip">11/2025</span><span class="chip">₹5,000</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ─────────── ABYSSAL · 1000–6000 m ─────────── -->
+  <section class="zone" id="abyssal" data-zone-name="ABYSSOPELAGIC">
+    <div class="shell">
+      <div class="zone-head reveal">
+        <p class="eyebrow"><span class="m">−1,400 M</span> · ABYSSOPELAGIC · NO LIGHT HAS EVER REACHED HERE</p>
+        <h2 class="zone-title">What the pressure<br><em>couldn't crush.</em></h2>
+        <p class="zone-sub">The deep record: where I've worked, what I've filed, what I've won. Everything below this line was earned under pressure.</p>
+      </div>
+
+      <div class="record reveal">
+        <span class="tag"><span class="dot"></span>Field record — experience</span>
+        <div class="rows">
+          <div class="row">
+            <div class="when">12/2025 — 02/2026</div>
+            <div>
+              <h4>Green Skills Intern</h4>
+              <div class="org">1M1B GREEN SKILLS ACADEMY</div>
+              <p>Applying AI and data-analytics to sustainability and climate datasets — building data-driven climate-intelligence for energy, water, and waste optimization.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="when">10/2025 — 12/2025</div>
+            <div>
+              <h4>Campus Ambassador</h4>
+              <div class="org">GSSOC — GIRLSCRIPT SUMMER OF CODE</div>
+              <p>Represented the GSSoC community on campus — the point of contact for mentorship, updates, and coordination, keeping engagement and visibility high.</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="when">01/2025 — 09/2025</div>
+            <div>
+              <h4>TechLead Intern</h4>
+              <div class="org">VISWAM AI</div>
+              <p>Contributed to AI data corpus development and collaborative machine learning projects focused on real-world problem solving.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="record reveal">
+        <span class="tag"><span class="dot"></span>Artifacts recovered — patents filed</span>
+        <div class="patents">
+          <div class="card patent">
+            <p class="depth-mark" style="margin-bottom:0">−3,100 M</p>
+            <h4>Ultrasonication-Assisted Synthesis of Soft Magnetic NiFe₂O₄ Nanoparticles</h4>
+            <p class="pno">APPLICATION 202541055673 A</p>
+            <p>A tunable, synthesis-driven route to tailoring magnetic behavior in ferrite nanomaterials — the ultrasonication-assisted method improved particle dispersion, reduced crystallite size, and produced soft magnetic properties fit for biomedical and high-frequency electronics.</p>
+          </div>
+          <div class="card patent">
+            <p class="depth-mark" style="margin-bottom:0">−3,400 M</p>
+            <h4>Smartwatch-Based Adaptive Posture Monitoring &amp; Feedback System</h4>
+            <p class="pno">APPLICATION 202541056107 A</p>
+            <p>A fully offline wearable that detects and corrects posture with onboard sensors and embedded ML — real-time inference, adaptive haptic feedback, personalized incremental learning, and behavioral-biometric user identification. No cloud required.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="record reveal">
+        <span class="tag"><span class="dot"></span>Podiums — 2024 → 2026</span>
+        <div class="podiums">
+          <div class="podium"><span class="place">2nd</span><div><h5>BuildSphere — Synergia 2026 web dev competition</h5><span>BVRIT Hyderabad · 04/2026 · ₹3,000</span></div></div>
+          <div class="podium"><span class="place">1st</span><div><h5>Naveena 2k25 Idea Presentation — Innovation Day</h5><span>BVRIT Hyderabad · 10/2025</span></div></div>
+          <div class="podium"><span class="place">1st</span><div><h5>Blind Coding — Engineer's Day</h5><span>BVRIT Hyderabad · 09/2024</span></div></div>
+          <div class="podium"><span class="place">1st</span><div><h5>Math To Code — National Mathematics Day</h5><span>BVRIT Hyderabad · 12/2024</span></div></div>
+          <div class="podium"><span class="place">3rd</span><div><h5>Mackathon — National Mathematics Day</h5><span>BVRIT Hyderabad · 12/2024</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────── HADAL · 6000–10,935 m ─────────── -->
+  <section class="zone" id="hadal" data-zone-name="HADAL">
+    <div class="shell">
+      <div class="last-light">
+        <div class="card reveal">
+          <span class="tag"><span class="dot"></span>−10,935 M · Challenger Deep</span>
+          <h2>The last light<br><em>is a hello.</em></h2>
+          <p>You've reached the bottom of the dive — full ocean depth, 1,088 atmospheres. Almost nothing survives down here except one thing: a message. Send one up.</p>
+          <div class="contact-links">
+            <a class="c-link primary" href="mailto:vijayayeditha564@gmail.com">Send a signal</a>
+            <a class="c-link" href="https://github.com/VijayaY836" target="_blank" rel="noopener">GitHub</a>
+            <a class="c-link" href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" target="_blank" rel="noopener">LinkedIn</a>
+            <a class="c-link" href="Resume.pdf" download="Vijaya-Yeditha-Resume.pdf">Résumé</a>
+          </div>
+        </div>
+        <div class="hadal-foot">
+          Vijaya Bhaskara Lakshmi Yeditha · Hyderabad, IN<br>
+          Telugu · English · Hindi — books, chess, sketching, classical dance, history<br>
+          Every pixel on this page is generated code. No stock. No templates.<br>
+          <button class="resurface" id="resurface">↑ Resurface</button>
+          &nbsp;
+          <a class="resurface" href="roads.html">↩ Back to the crossroads</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+<script>
+/* ============================================================
+   DEEP DIVE ENGINE — inertial scroll · scroll-scrubbed ocean ·
+   bathymetric gauge · bioluminescent particle field · audio
+   ============================================================ */
+(() => {
+'use strict';
+
+const RM = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const lerp  = (a,b,t)=>a+(b-a)*t;
+const smoothstep=(a,b,x)=>{x=clamp((x-a)/(b-a),0,1);return x*x*(3-2*x)};
+
+/* ---------- scroll architecture ---------- */
+const world  = $('#world');
+const spacer = $('#spacer');
+let vh=innerHeight, vw=innerWidth;
+let docH=0, maxScroll=1;
+let target=0, smooth=0, lastSmooth=0, dScroll=0;
+
+if (RM) document.body.classList.add('static-mode');
+
+function sizeWorld(){
+  vh=innerHeight; vw=innerWidth;
+  if (RM){ docH=document.documentElement.scrollHeight; }
+  else { docH=world.scrollHeight; spacer.style.height=docH+'px'; }
+  maxScroll=Math.max(1,docH-vh);
+  measureZones();
+}
+
+/* ---------- zones & bathymetric depth map ----------
+   Scroll progress maps to REAL ocean depth: zone boundaries land
+   exactly where the corresponding sections begin.               */
+const ZONE_IDS=['surface','sunlit','twilight','abyssal','hadal'];
+const ZONE_LABELS=['SURFACE','EPIPELAGIC','MESOPELAGIC','ABYSSOPELAGIC','HADAL'];
+const DEPTHS=[0,200,1000,4000,6000,10935]; // metres at each anchor
+let anchors=[0,.15,.35,.6,.85,1];          // scroll-progress anchors (measured)
+let zoneStarts=[0,0,0,0,0];
+
+function measureZones(){
+  const els=ZONE_IDS.map(id=>document.getElementById(id));
+  zoneStarts=els.map(el=>{
+    let y=0,n=el; while(n && n!==world && n!==document.body){y+=n.offsetTop;n=n.offsetParent}
+    return y;
+  });
+  anchors=[0,...zoneStarts.slice(1).map(y=>clamp(y/maxScroll,0,1)),1];
+  buildTicks();
+}
+function depthAt(p){
+  p=clamp(p,0,1);
+  for(let i=0;i<5;i++){
+    if(p<=anchors[i+1]||i===4){
+      const t=(p-anchors[i])/Math.max(1e-6,anchors[i+1]-anchors[i]);
+      return lerp(DEPTHS[i],DEPTHS[i+1],clamp(t,0,1));
+    }
+  }
+  return DEPTHS[5];
+}
+function zoneIndexAt(p){
+  for(let i=4;i>=0;i--) if(p>=anchors[i]-1e-4) return i;
+  return 0;
+}
+/* fade an element in/out based on which named zone (by anchors index) it belongs to */
+function zoneAlpha(zone,p){
+  const a=anchors[zone], b=anchors[zone+1];
+  const fade=Math.max(0.01,(b-a)*0.18);
+  return smoothstep(a,a+fade,p)*(1-smoothstep(b-fade,b,p));
+}
+
+/* ---------- gauge ---------- */
+const gFill=$('#gFill'), gDepth=$('#gDepth'), gPressure=$('#gPressure'),
+      gZone=$('#gZone'), gTicks=$('#gTicks');
+const TICK_LABELS=['0','200','1k','4k','6k','10.9k'];
+function buildTicks(){
+  if(!gTicks) return;
+  let html='';
+  for(let i=1;i<20;i++){
+    html+=`<span class="g-tick minor" style="top:${i*5}%"><i></i></span>`;
+  }
+  anchors.forEach((a,i)=>{
+    html+=`<span class="g-tick" style="top:${(a*100).toFixed(2)}%"><b>${TICK_LABELS[i]}</b><i></i></span>`;
+  });
+  gTicks.innerHTML=html;
+}
+let lastDepthShown=-1;
+function updateGauge(p){
+  const d=depthAt(p);
+  if(Math.abs(d-lastDepthShown)>0.5||p===0||p>=1){
+    lastDepthShown=d;
+    gDepth.innerHTML=String(Math.round(d)).padStart(5,'0')+' <small>M</small>';
+    const atm=1+d/10.058;
+    gPressure.innerHTML=atm.toFixed(1).padStart(6,'0')+' <small>ATM</small>';
+    gFill.style.setProperty('--p',(p*100).toFixed(2)+'%');
+    const zi=zoneIndexAt(p);
+    if(gZone.textContent!==ZONE_LABELS[zi]) gZone.textContent=ZONE_LABELS[zi];
+    navButtons.forEach((b,i)=>b.classList.toggle('active',i===zi));
+  }
+}
+
+/* ---------- zone nav ---------- */
+const navButtons=$$('#depthnav .dn');
+navButtons.forEach((b,i)=>{
+  b.addEventListener('click',()=>{
+    const top=i===0?0:zoneStarts[i]+2;
+    window.scrollTo({top,behavior:RM?'auto':'smooth'});
+  });
+});
+const resurface=$('#resurface');
+if(resurface) resurface.addEventListener('click',()=>window.scrollTo({top:0,behavior:RM?'auto':'smooth'}));
+
+/* ---------- reveal choreography ---------- */
+const io=new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('lit'); io.unobserve(e.target);} });
+},{threshold:0.18,rootMargin:'0px 0px -8% 0px'});
+$$('.reveal').forEach(el=>io.observe(el));
+
+/* ---------- mouse parallax ---------- */
+const mouse={x:0,y:0}, mouseL={x:0,y:0};
+addEventListener('pointermove',e=>{
+  mouse.x=(e.clientX/vw)*2-1;
+  mouse.y=(e.clientY/vh)*2-1;
+},{passive:true});
+
+/* ============================================================
+   OCEAN CANVAS
+   ============================================================ */
+const cv=$('#ocean'), ctx=cv.getContext('2d',{alpha:false});
+let W=0,H=0,DPR=1;
+function sizeCanvas(){
+  DPR=Math.min(devicePixelRatio||1,1.5);
+  W=innerWidth;H=innerHeight;
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+}
+
+/* --- continuous colour ramp (top & bottom of screen) --- */
+function hex(h){return[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]}
+const RAMP_TOP=[[0,hex('#FDF3D8')],[0.05,hex('#BEF0E8')],[0.16,hex('#46BCDE')],[0.36,hex('#19648F')],[0.60,hex('#092345')],[0.84,hex('#030A17')],[1,hex('#000103')]];
+const RAMP_BOT=[[0,hex('#2E9FC4')],[0.16,hex('#0F5E86')],[0.36,hex('#07294E')],[0.60,hex('#020B1D')],[0.84,hex('#000309')],[1,hex('#000000')]];
+function rampColor(ramp,p){
+  for(let i=0;i<ramp.length-1;i++){
+    const[a,ca]=ramp[i],[b,cb]=ramp[i+1];
+    if(p<=b||i===ramp.length-2){
+      const t=clamp((p-a)/(b-a),0,1);
+      return[lerp(ca[0],cb[0],t)|0,lerp(ca[1],cb[1],t)|0,lerp(ca[2],cb[2],t)|0];
+    }
+  }
+  return ramp[ramp.length-1][1];
+}
+const rgb=c=>`rgb(${c[0]},${c[1]},${c[2]})`;
+const rgba=(c,a)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+
+/* --- bioluminescent particle field (3 implicit parallax layers) --- */
+const BIO_N = 180;
+const bio=[];
+for(let i=0;i<BIO_N;i++){
+  const z=0.25+Math.random()*0.75;                 // parallax depth
+  const center=0.18+Math.pow(Math.random(),0.7)*0.82; // weighted deeper
+  bio.push({
+    x:Math.random(), y:Math.random(),              // normalized, wrapped
+    z, r:(0.7+Math.random()*2.1)*z+0.4,
+    mix:Math.random(),                             // teal↔violet
+    band:[Math.max(0,center-0.16-Math.random()*0.14), Math.min(1.02,center+0.16+Math.random()*0.14)],
+    ph:Math.random()*Math.PI*2,
+    tw:0.5+Math.random()*1.6,                      // twinkle speed
+    dx:(Math.random()-0.5)*0.006,
+    dy:(Math.random()-0.5)*0.004,
+    beat:Math.random()<0.3                         // synced to global pulse
+  });
+}
+/* --- ambient motes (plankton / marine snow) --- */
+const MOTE_N=110;
+const motes=[];
+for(let i=0;i<MOTE_N;i++){
+  motes.push({x:Math.random(),y:Math.random(),z:0.08+Math.random()*0.3,
+    r:0.4+Math.random()*0.9,a:0.04+Math.random()*0.10,ph:Math.random()*7,
+    dy:0.004+Math.random()*0.01});
+}
+/* --- surface sparkles --- */
+const SPARK_N=46;
+const sparks=[];
+for(let i=0;i<SPARK_N;i++) sparks.push({x:Math.random(),y:Math.random()*0.35,ph:Math.random()*7,s:0.6+Math.random()*1.8});
+
+/* --- fish schools (deterministic, spread across Sunlit, full width) --- */
+const schools=[];
+function makeSchool(yFrac,startFrac,dir,s,rgb,n){
+  const members=[];
+  for(let i=0;i<n;i++){
+    members.push({ox:i*(s*2.3),oy:Math.sin(i*1.7)*s*1.6,ph:i*1.1});
+  }
+  return {dir,x:0,startFrac,yFrac,s,members,zone:1,rgb};
+}
+schools.push(makeSchool(0.14,0.06, 1,13,'127,233,242',8));  /* cyan   — far left  */
+schools.push(makeSchool(0.26,0.30,-1,11,'255,143,163',7));  /* pink   — left-mid  */
+schools.push(makeSchool(0.20,0.56, 1,12,'243,196,107',9));  /* gold   — right-mid */
+schools.push(makeSchool(0.36,0.80,-1,10,'183,174,255',7));  /* lavender — far right */
+schools.push(makeSchool(0.46,0.42, 1,11,'255,179,126',8));  /* coral  — lower-mid */
+function drawFishShape(){ /* unit fish pointing +x */
+  ctx.beginPath();
+  ctx.moveTo(0.5,0);
+  ctx.quadraticCurveTo(0.08,-0.34,-0.26,0);
+  ctx.quadraticCurveTo(0.08,0.34,0.5,0);
+  ctx.closePath();
+  ctx.moveTo(-0.26,0);
+  ctx.lineTo(-0.52,-0.24);ctx.lineTo(-0.52,0.24);ctx.closePath();
+}
+
+/* --- rising bubbles (ambient) --- */
+const BUB_N=26;
+const bubbles=[];
+for(let i=0;i<BUB_N;i++){
+  bubbles.push({x:Math.random(),y:Math.random(),r:1.2+Math.random()*3.4,
+    vy:0.05+Math.random()*0.09,wob:Math.random()*7,ws:0.4+Math.random()*0.8});
+}
+
+/* --- caustic web grid --- */
+let caustPts=[];
+function buildCaustics(){
+  caustPts=[];
+  const gx=Math.ceil(W/120)+2, gy=Math.ceil(H/150)+2;
+  for(let j=0;j<gy;j++)for(let i=0;i<gx;i++)
+    caustPts.push({i,j,gx,x0:i*120-60,y0:j*150-70,ph:(i*7.3+j*3.1)});
+}
+
+/* --- the creature roster: several per zone, spread across the screen ---
+   zone: 1=sunlit(fish schools above), 2=twilight, 3=abyssal, 4=hadal */
+const creatures=[
+  /* twilight — jellyfish, spread across the full width */
+  {type:'jelly',  s:130, yFrac:0.20, startFrac:0.10, zone:2, speed:0.028, dir:1,  bob:1.0},
+  {type:'jelly',  s:150, yFrac:0.42, startFrac:0.38, zone:2, speed:0.022, dir:-1, bob:3.4},
+  {type:'jelly',  s:110, yFrac:0.64, startFrac:0.62, zone:2, speed:0.030, dir:1,  bob:5.6},
+  {type:'jelly',  s:135, yFrac:0.32, startFrac:0.85, zone:2, speed:0.024, dir:-1, bob:0.7},
+
+  /* abyssal — turtles, spread across the full width */
+  {type:'turtle', s:150, yFrac:0.28, startFrac:0.08, zone:3, speed:0.05,  dir:1,  bob:0},
+  {type:'turtle', s:130, yFrac:0.50, startFrac:0.36, zone:3, speed:0.04,  dir:-1, bob:2.2},
+  {type:'turtle', s:160, yFrac:0.72, startFrac:0.60, zone:3, speed:0.045, dir:1,  bob:4.1},
+  {type:'turtle', s:140, yFrac:0.42, startFrac:0.86, zone:3, speed:0.038, dir:-1, bob:1.5},
+
+  /* hadal — kept a little sparser given their size, but covering left/center/right */
+  {type:'whale',  s:420, yFrac:0.36, startFrac:0.08, zone:4, speed:0.032, dir:1,  bob:0},
+  {type:'whale',  s:300, yFrac:0.66, startFrac:0.44, zone:4, speed:0.026, dir:-1, bob:3.0},
+  {type:'whale',  s:260, yFrac:0.30, startFrac:0.82, zone:4, speed:0.030, dir:1,  bob:5.2}
+];
+function drawWhale(c){
+  ctx.beginPath();
+  ctx.moveTo(-0.50,0.00);
+  ctx.bezierCurveTo(-0.34,-0.17,0.10,-0.21,0.36,-0.06);
+  ctx.bezierCurveTo(0.46,-0.01,0.46,0.03,0.36,0.06);
+  ctx.bezierCurveTo(0.10,0.17,-0.28,0.15,-0.42,0.05);
+  ctx.lineTo(-0.47,0.13);ctx.quadraticCurveTo(-0.58,0.02,-0.47,-0.13);ctx.closePath();
+  ctx.moveTo(0.05,0.08);ctx.quadraticCurveTo(-0.02,0.22,-0.12,0.24);
+  ctx.quadraticCurveTo(-0.05,0.12,-0.02,0.07);ctx.closePath();
+}
+function drawRay(c){
+  ctx.beginPath();
+  ctx.moveTo(-0.10,0);
+  ctx.quadraticCurveTo(0.05,-0.34,0.34,-0.10);
+  ctx.quadraticCurveTo(0.16,-0.02,0.12,0.00);
+  ctx.quadraticCurveTo(0.16,0.02,0.34,0.10);
+  ctx.quadraticCurveTo(0.05,0.34,-0.10,0);ctx.closePath();
+  ctx.moveTo(0.12,0);ctx.lineTo(0.55,0.03);ctx.lineTo(0.13,0.02);ctx.closePath();
+}
+function drawJelly(c,t){
+  const sway=Math.sin(t*0.8+c.bob)*0.05;
+  ctx.beginPath();
+  ctx.arc(0,0,0.22,Math.PI,0,false);
+  ctx.quadraticCurveTo(0.20,0.10,0.16,0.06);
+  ctx.quadraticCurveTo(0,0.14,-0.16,0.06);
+  ctx.quadraticCurveTo(-0.20,0.10,-0.22,0);ctx.closePath();
+  for(let k=-2;k<=2;k++){
+    ctx.moveTo(k*0.07,0.08);
+    ctx.quadraticCurveTo(k*0.07+sway,0.34,k*0.05+sway*2,0.58);
+  }
+}
+function drawSquid(c,t){
+  ctx.beginPath();
+  ctx.moveTo(-0.34,0);ctx.quadraticCurveTo(-0.30,-0.14,-0.06,-0.09);
+  ctx.quadraticCurveTo(0.06,-0.07,0.10,-0.05);
+  for(let k=0;k<4;k++){
+    const yy=-0.04+k*0.028, wob=Math.sin(t*1.3+k)*0.03;
+    ctx.quadraticCurveTo(0.28,yy+wob,0.44,yy+wob*2);
+    ctx.quadraticCurveTo(0.26,yy+0.012,0.10,yy+0.012);
+  }
+  ctx.quadraticCurveTo(0.06,0.07,-0.06,0.09);
+  ctx.quadraticCurveTo(-0.30,0.14,-0.34,0);ctx.closePath();
+  ctx.moveTo(-0.34,0);ctx.lineTo(-0.5,-0.09);ctx.lineTo(-0.42,0);ctx.lineTo(-0.5,0.09);ctx.closePath();
+}
+function drawAngler(c,t){
+  ctx.beginPath();
+  ctx.arc(0,0,0.20,0.5,Math.PI*2-0.5,false);
+  ctx.lineTo(0.30,-0.13);ctx.lineTo(0.16,-0.02);
+  ctx.lineTo(0.30,0.14);ctx.closePath();
+  ctx.moveTo(-0.20,0);ctx.lineTo(-0.34,-0.09);ctx.lineTo(-0.34,0.09);ctx.closePath();
+}
+function drawTurtle(c,t){
+  const fl=Math.sin(t*2+c.bob)*0.1;
+  ctx.beginPath();
+  ctx.ellipse(0,0,0.26,0.18,0,0,7);            /* shell */
+  ctx.moveTo(0.42,0);
+  ctx.arc(0.34,0,0.08,0,7);                    /* head  */
+  /* front flippers (paddling) */
+  ctx.moveTo(0.06,-0.15);
+  ctx.quadraticCurveTo(0.02+fl,-0.4,-0.14+fl,-0.34);
+  ctx.quadraticCurveTo(-0.02,-0.22,0.02,-0.13);
+  ctx.moveTo(0.06,0.15);
+  ctx.quadraticCurveTo(0.02-fl,0.4,-0.14-fl,0.34);
+  ctx.quadraticCurveTo(-0.02,0.22,0.02,0.13);
+  /* tail */
+  ctx.moveTo(-0.26,0);ctx.lineTo(-0.35,-0.05);ctx.lineTo(-0.35,0.05);ctx.closePath();
+}
+function drawSeahorse(c,t){
+  const cur=Math.sin(t*1.2+c.bob)*0.04;
+  ctx.beginPath();
+  ctx.moveTo(0.1,-0.42);                       /* snout */
+  ctx.quadraticCurveTo(-0.14,-0.46,-0.12,-0.26);
+  ctx.quadraticCurveTo(0.14,-0.16,0.12,0.04);  /* belly */
+  ctx.quadraticCurveTo(0.08,0.26,-0.04,0.32);
+  ctx.quadraticCurveTo(-0.18+cur,0.4,-0.12,0.24);   /* tail curl */
+  ctx.quadraticCurveTo(-0.02,0.14,-0.03,-0.02);
+  ctx.quadraticCurveTo(-0.07,-0.2,0.1,-0.42);
+  ctx.closePath();
+  /* dorsal fin */
+  ctx.moveTo(0.12,-0.06);
+  ctx.quadraticCurveTo(0.24,-0.02,0.13,0.06);
+  ctx.closePath();
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+let t0=performance.now(), frozen=RM;
+let rafId=null;
+function render(now){
+  const t=frozen?0:(now-t0)/1000;
+
+  /* smooth the scroll */
+  target=window.scrollY||0;
+  if(RM){smooth=target;}
+  else{
+    smooth+=(target-smooth)*0.085;
+    if(Math.abs(target-smooth)<0.05)smooth=target;
+    world.style.transform=`translate3d(0,${(-smooth).toFixed(2)}px,0)`;
+  }
+  dScroll=smooth-lastSmooth;lastSmooth=smooth;
+  const p=clamp(smooth/maxScroll,0,1);
+
+  mouseL.x=lerp(mouseL.x,mouse.x,0.04);
+  mouseL.y=lerp(mouseL.y,mouse.y,0.04);
+
+  updateGauge(p);
+  document.documentElement.style.setProperty('--card-line',
+    p<0.5?'rgba(127,233,242,.22)':'rgba(138,124,255,.20)');
+
+  const pulse=(Math.sin(t*1.8)+1)/2;   // global bioluminescent heartbeat
+  const topC=rampColor(RAMP_TOP,p), botC=rampColor(RAMP_BOT,Math.min(1,p+0.05));
+
+  /* background gradient — continuous, computed live */
+  const g=ctx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,rgb(topC));g.addColorStop(1,rgb(botC));
+  ctx.globalCompositeOperation='source-over';
+  ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+
+  /* ---- surface plane + sun glitter (recedes upward fast) ---- */
+  const surfFade=1-smoothstep(0.0,0.10,p);
+  if(surfFade>0.01){
+    const sy=-p*H*7;
+
+    /* the sun — a clear warm disc, shore-lit */
+    const sunX=W*0.78, sunY=sy+H*0.10, sunR=Math.min(W,H)*0.09;
+    ctx.globalCompositeOperation='lighter';
+    const outerGlow=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,sunR*5.5);
+    outerGlow.addColorStop(0,`rgba(255,244,214,${0.30*surfFade})`);
+    outerGlow.addColorStop(0.4,`rgba(255,230,180,${0.12*surfFade})`);
+    outerGlow.addColorStop(1,'rgba(255,230,180,0)');
+    ctx.fillStyle=outerGlow;ctx.fillRect(0,0,W,H);
+    const core=ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,sunR);
+    core.addColorStop(0,`rgba(255,255,250,${0.95*surfFade})`);
+    core.addColorStop(0.6,`rgba(255,246,214,${0.85*surfFade})`);
+    core.addColorStop(1,`rgba(255,236,190,${0.55*surfFade})`);
+    ctx.fillStyle=core;
+    ctx.beginPath();ctx.arc(sunX,sunY,sunR,0,7);ctx.fill();
+    ctx.globalCompositeOperation='source-over';
+
+    const sg=ctx.createLinearGradient(0,sy,0,sy+H*0.5);
+    sg.addColorStop(0,`rgba(255,250,236,${0.75*surfFade})`);
+    sg.addColorStop(0.25,`rgba(224,248,244,${0.28*surfFade})`);
+    sg.addColorStop(1,'rgba(214,248,255,0)');
+    ctx.fillStyle=sg;ctx.fillRect(0,sy,W,H*0.5+Math.max(0,-sy));
+    ctx.globalCompositeOperation='lighter';
+    for(const s of sparks){
+      const tw=Math.max(0,Math.sin(t*2.2*s.s+s.ph));
+      const a=tw*tw*0.8*surfFade;
+      if(a<0.02)continue;
+      const x=s.x*W,y=sy+H*0.05+s.y*H*0.4;
+      ctx.fillStyle=`rgba(255,250,230,${a})`;
+      ctx.fillRect(x-1,y,2.4*s.s,1.1);
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+
+  /* ---- caustic web (shallow only) ---- */
+  const caFade=(1-smoothstep(0.10,0.26,p))*smoothstep(-0.02,0.01,p);
+  if(caFade>0.015&&!frozen){
+    ctx.globalCompositeOperation='lighter';
+    ctx.lineWidth=1.1;
+    for(const c of caustPts){
+      const wob1=Math.sin(t*0.9+c.ph)*34, wob2=Math.cos(t*0.7+c.ph*1.3)*26;
+      const x=c.x0+wob1, y=c.y0+wob2*0.6;
+      const fl=0.5+0.5*Math.sin(t*1.6+c.ph*2.1);
+      ctx.strokeStyle=`rgba(225,252,255,${(0.028+0.05*fl)*caFade})`;
+      ctx.beginPath();
+      ctx.moveTo(x-46,y+Math.sin(t+c.ph)*10);
+      ctx.quadraticCurveTo(x,y-34,x+52,y+Math.cos(t*1.2+c.ph)*12);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x-30,y+40);
+      ctx.quadraticCurveTo(x+wob2,y,x+34,y+44);
+      ctx.stroke();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+
+  /* ---- god rays ---- */
+  const rayFade=smoothstep(0.02,0.08,p)*(1-smoothstep(0.28,0.5,p));
+  if(rayFade>0.01){
+    ctx.globalCompositeOperation='lighter';
+    for(let i=0;i<6;i++){
+      const bx=W*(0.08+i*0.17)+mouseL.x*18;
+      const ang=0.32+i*0.015+(frozen?0:Math.sin(t*0.11+i*1.7)*0.05);
+      const len=H*1.5,wTop=26+i*9,wBot=wTop*4.5;
+      const breathe=0.6+0.4*Math.sin(t*0.23+i*2.1);
+      ctx.save();ctx.translate(bx,-40);ctx.rotate(ang);
+      const rg=ctx.createLinearGradient(0,0,0,len);
+      rg.addColorStop(0,`rgba(210,244,255,${0.10*rayFade*breathe})`);
+      rg.addColorStop(0.6,`rgba(180,235,255,${0.035*rayFade*breathe})`);
+      rg.addColorStop(1,'rgba(180,235,255,0)');
+      ctx.fillStyle=rg;
+      ctx.beginPath();
+      ctx.moveTo(-wTop/2,0);ctx.lineTo(wTop/2,0);
+      ctx.lineTo(wBot/2,len);ctx.lineTo(-wBot/2,len);ctx.closePath();ctx.fill();
+      ctx.restore();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+
+  /* ---- fish school — visible only in Sunlit ---- */
+  ctx.globalCompositeOperation='source-over';
+  for(const sch of schools){
+    if(!frozen){
+      sch.x+=18/60;
+      sch.x=((sch.x%(W+300))+(W+300))%(W+300);
+    }
+    const zAlpha=zoneAlpha(sch.zone,p);
+    if(zAlpha<0.015)continue;
+    const baseY=H*sch.yFrac + (frozen?0:Math.sin(t*0.5)*10) + mouseL.y*6;
+    for(const m of sch.members){
+      const fx=((sch.x-m.ox)%(W+300)+(W+300))%(W+300) - 150 + mouseL.x*8;
+      const fy=baseY+m.oy+(frozen?0:Math.sin(t*2.4+m.ph)*3);
+      const flap=frozen?1:(0.82+0.18*Math.sin(t*8+m.ph));
+      ctx.save();
+      ctx.translate(fx,fy);
+      ctx.scale(sch.s*sch.dir,sch.s*flap);
+      drawFishShape();
+      ctx.fillStyle=`rgba(${sch.rgb},${0.55*zAlpha})`;
+      ctx.fill();
+      ctx.restore();
+      ctx.fillStyle=`rgba(255,255,255,${0.85*zAlpha})`;
+      ctx.beginPath();ctx.arc(fx+sch.s*0.3*sch.dir,fy-sch.s*0.05,Math.max(1,sch.s*0.07),0,7);ctx.fill();
+    }
+  }
+
+  /* ---- turtle (Abyssal), jellyfish (Twilight), whale (Hadal) — each visible only in its own zone ---- */
+  ctx.globalCompositeOperation='source-over';
+  for(const c of creatures){
+    if(!frozen){
+      c.x=(c.x||0)+c.speed;
+    }
+    const zAlpha=zoneAlpha(c.zone,p);
+    if(zAlpha<0.015)continue;
+    const span=W+c.s*2.4;
+    const cx=(((c.x%span)+span)%span) - c.s*1.2;
+    const cy=H*c.yFrac + (frozen?0:Math.sin(t*0.35+c.bob)*14) + mouseL.y*6;
+    const bodyA=0.26*zAlpha, rimA=0.16*zAlpha;
+    const cute=(c.type==='turtle');
+    ctx.save();
+    ctx.translate(cx+mouseL.x*8,cy);
+    ctx.scale(c.s*c.dir,c.s);
+    ctx.lineWidth=2.2/c.s;
+    if(c.type==='whale')drawWhale(c);
+    else if(c.type==='jelly')drawJelly(c,t);
+    else drawTurtle(c,t);
+    ctx.fillStyle=cute?`rgba(72,168,150,${0.34*zAlpha})`:`rgba(46,78,128,${bodyA})`;
+    ctx.strokeStyle=cute?`rgba(127,233,242,${0.42*zAlpha})`:`rgba(89,242,216,${rimA})`;
+    ctx.fill();ctx.stroke();
+    if(c.type==='jelly'){
+      const jg=ctx.createRadialGradient(0,-0.05,0,0,-0.05,0.3);
+      jg.addColorStop(0,`rgba(138,124,255,${0.16*zAlpha*(0.5+0.5*pulse)})`);
+      jg.addColorStop(1,'rgba(138,124,255,0)');
+      ctx.fillStyle=jg;ctx.beginPath();ctx.arc(0,-0.05,0.3,0,7);ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  /* ---- bioluminescent particles ---- */
+  const density=smoothstep(0.13,0.55,p)*0.85+0.15;
+  ctx.globalCompositeOperation='lighter';
+  for(const b of bio){
+    const vis=smoothstep(b.band[0],b.band[0]+0.08,p)*(1-smoothstep(b.band[1]-0.08,b.band[1],p));
+    if(vis<0.02)continue;
+    if(!frozen){
+      b.y-=(dScroll*b.z*0.9)/H;
+      b.x+=b.dx/60;b.y+=b.dy/60;
+      if(b.y>1.06)b.y-=1.12; if(b.y<-0.06)b.y+=1.12;
+      if(b.x>1.04)b.x-=1.08; if(b.x<-0.04)b.x+=1.08;
+    }
+    const tw=frozen?0.7:(0.45+0.55*Math.sin(t*b.tw+b.ph)*(b.beat?pulse:1));
+    const a=clamp(tw,0.12,1)*vis*density*0.85;
+    if(a<0.02)continue;
+    const x=b.x*W+mouseL.x*46*b.z, y=b.y*H+mouseL.y*30*b.z;
+    const r=b.r*(2.6+2.2*tw);
+    const col=b.mix<0.6?[89,242,216]:(b.mix<0.85?[127,233,242]:[138,124,255]);
+    const pg=ctx.createRadialGradient(x,y,0,x,y,r);
+    pg.addColorStop(0,`rgba(${col[0]},${col[1]},${col[2]},${a})`);
+    pg.addColorStop(0.35,`rgba(${col[0]},${col[1]},${col[2]},${a*0.35})`);
+    pg.addColorStop(1,`rgba(${col[0]},${col[1]},${col[2]},0)`);
+    ctx.fillStyle=pg;
+    ctx.beginPath();ctx.arc(x,y,r,0,7);ctx.fill();
+    ctx.fillStyle=`rgba(235,255,252,${a*0.9})`;
+    ctx.beginPath();ctx.arc(x,y,Math.max(0.5,b.r*0.55),0,7);ctx.fill();
+  }
+
+  /* ---- marine snow / plankton motes ---- */
+  const moteLight=lerp(0.9,0.45,p);
+  for(const m of motes){
+    if(!frozen){
+      m.y+=m.dy/60 - (dScroll*m.z*0.9)/H;
+      m.x+=Math.sin(t*0.5+m.ph)*0.00015;
+      if(m.y>1.04)m.y-=1.08; if(m.y<-0.04)m.y+=1.08;
+    }
+    const x=m.x*W+mouseL.x*14*m.z, y=m.y*H+mouseL.y*9*m.z;
+    ctx.fillStyle=`rgba(214,240,248,${m.a*moteLight})`;
+    ctx.fillRect(x,y,m.r,m.r);
+  }
+
+  /* ---- rising bubbles ---- */
+  const bubLight=lerp(0.55,0.25,p);
+  ctx.lineWidth=1;
+  for(const b of bubbles){
+    if(!frozen){
+      b.y-=b.vy/60 + (dScroll*0.5)/H;
+      if(b.y<-0.04){b.y+=1.1;b.x=Math.random();}
+      if(b.y>1.06)b.y-=1.1;
+    }
+    const x=b.x*W+Math.sin(t*b.ws+b.wob)*8+mouseL.x*10, y=b.y*H;
+    ctx.strokeStyle=`rgba(214,244,252,${0.35*bubLight})`;
+    ctx.beginPath();ctx.arc(x,y,b.r,0,7);ctx.stroke();
+    ctx.fillStyle=`rgba(255,255,255,${0.5*bubLight})`;
+    ctx.beginPath();ctx.arc(x-b.r*0.35,y-b.r*0.35,Math.max(0.5,b.r*0.24),0,7);ctx.fill();
+  }
+
+  /* ---- the last light (hadal warm cluster) ---- */
+  const warm=smoothstep(0.86,0.965,p);
+  if(warm>0.01){
+    const wx=W/2+mouseL.x*10,wy=H*0.46+mouseL.y*8;
+    const wr=Math.max(W,H)*0.62;
+    const wg=ctx.createRadialGradient(wx,wy,0,wx,wy,wr);
+    const wa=warm*(0.10+0.05*pulse);
+    wg.addColorStop(0,`rgba(255,200,122,${wa})`);
+    wg.addColorStop(0.4,`rgba(255,178,96,${wa*0.35})`);
+    wg.addColorStop(1,'rgba(255,178,96,0)');
+    ctx.fillStyle=wg;ctx.fillRect(0,0,W,H);
+  }
+
+  /* ---- pressure vignette (deepens with descent) ---- */
+  ctx.globalCompositeOperation='source-over';
+  const vg=ctx.createRadialGradient(W/2,H/2,Math.min(W,H)*0.32,W/2,H/2,Math.max(W,H)*0.82);
+  vg.addColorStop(0,'rgba(0,2,6,0)');
+  vg.addColorStop(1,`rgba(0,2,6,${0.22+0.4*p})`);
+  ctx.fillStyle=vg;ctx.fillRect(0,0,W,H);
+
+  /* ---- audio follows depth ---- */
+  if(audioOn&&filter){
+    filter.frequency.value=lerp(420,110,p);
+    if(pulseGainLFO)pulseGainLFO.gain.value=lerp(0.004,0.016,p);
+  }
+
+  rafId=requestAnimationFrame(render);
+}
+
+/* Pause the render loop when the tab isn't visible — identical visuals,
+   just no wasted GPU/battery in a background tab. Nothing removed;
+   this only skips frames while the tab can't be seen. */
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden){
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = null;
+  } else if (!rafId){
+    rafId = requestAnimationFrame(render);
+  }
+});
+
+/* ============================================================
+   AMBIENT AUDIO — brown-noise hum + pulse synced to heartbeat
+   ============================================================ */
+let actx=null,master=null,filter=null,pulseGainLFO=null,audioOn=false;
+function initAudio(){
+  actx=new(window.AudioContext||window.webkitAudioContext)();
+  master=actx.createGain();master.gain.value=0;master.connect(actx.destination);
+  /* brown noise bed */
+  const len=actx.sampleRate*3, buf=actx.createBuffer(1,len,actx.sampleRate);
+  const data=buf.getChannelData(0);let last=0;
+  for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+0.02*w)/1.02;data[i]=last*3.2;}
+  const src=actx.createBufferSource();src.buffer=buf;src.loop=true;
+  filter=actx.createBiquadFilter();filter.type='lowpass';filter.frequency.value=300;filter.Q.value=0.6;
+  const bed=actx.createGain();bed.gain.value=0.20;
+  src.connect(filter);filter.connect(bed);bed.connect(master);src.start();
+  /* slow swell LFO on the bed */
+  const lfo=actx.createOscillator();lfo.frequency.value=0.05;
+  const lfoG=actx.createGain();lfoG.gain.value=0.07;
+  lfo.connect(lfoG);lfoG.connect(bed.gain);lfo.start();
+  /* deep tone */
+  const tone=actx.createOscillator();tone.type='sine';tone.frequency.value=55;
+  const toneG=actx.createGain();toneG.gain.value=0.015;
+  tone.connect(toneG);toneG.connect(master);tone.start();
+  /* bioluminescent pulse — same 1.8 rad/s heartbeat as the particles */
+  const pOsc=actx.createOscillator();pOsc.type='sine';pOsc.frequency.value=174;
+  const pG=actx.createGain();pG.gain.value=0;
+  const pLFO=actx.createOscillator();pLFO.frequency.value=1.8/(2*Math.PI);
+  pulseGainLFO=actx.createGain();pulseGainLFO.gain.value=0.008;
+  pLFO.connect(pulseGainLFO);pulseGainLFO.connect(pG.gain);
+  pOsc.connect(pG);pG.connect(master);pOsc.start();pLFO.start();
+}
+const sBtn=$('#soundToggle');
+sBtn.addEventListener('click',()=>{
+  if(!(window.AudioContext||window.webkitAudioContext)){sBtn.style.display='none';return;}
+  if(!actx)initAudio();
+  if(actx.state==='suspended')actx.resume();
+  audioOn=!audioOn;
+  const now=actx.currentTime;
+  master.gain.cancelScheduledValues(now);
+  master.gain.setValueAtTime(master.gain.value,now);
+  master.gain.linearRampToValueAtTime(audioOn?1:0,now+(audioOn?2.4:0.8));
+  sBtn.classList.toggle('on',audioOn);
+  sBtn.setAttribute('aria-pressed',String(audioOn));
+});
+
+/* ============================================================
+   Internal navigation — smooth page-out to Back link
+   ============================================================ */
+document.querySelectorAll('a[href$=".html"]').forEach(el=>{
+  el.addEventListener('click', e=>{
+    const href=el.getAttribute('href');
+    if(!href||el.hasAttribute('target')) return;
+    e.preventDefault();
+    if(RM){ window.location.href=href; return; }
+    document.body.style.transition='opacity .35s ease';
+    document.body.style.opacity='0';
+    setTimeout(()=>{ window.location.href=href; },320);
+  });
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function boot(){
+  sizeCanvas();buildCaustics();sizeWorld();
+  smooth=window.scrollY||0;lastSmooth=smooth;
+  updateGauge(clamp(smooth/maxScroll,0,1));
+  /* the fish schools and creatures already exist (created at module load);
+     spread their starting x positions per-item so the roster reads as
+     evenly distributed the moment each zone becomes visible */
+  for(const sc of schools){ sc.x=W*sc.startFrac; }
+  for(const c of creatures){ c.x=W*c.startFrac; }
+  rafId=requestAnimationFrame(render);
+}
+addEventListener('resize',()=>{sizeCanvas();buildCaustics();sizeWorld();});
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>sizeWorld());
+setTimeout(sizeWorld,600);setTimeout(sizeWorld,2000);
+boot();
+})();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/sitemap.xml

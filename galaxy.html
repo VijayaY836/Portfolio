@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Vijaya Y — A Stellar Atlas</title>
 <meta name="description" content="The observation log of Vijaya Bhaskara Lakshmi Yeditha: a B.Tech Undergraduate. Every project charted as a celestial object in a personal star atlas." />
+<meta name="author" content="Vijaya Bhaskara Lakshmi Yeditha" />
+<link rel="canonical" href="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/galaxy.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Vijaya Y — A Stellar Atlas" />
+<meta property="og:description" content="The same body of work, re-charted as a dark stellar atlas you fall through by scroll — with one supernova along the way." />
+<meta property="og:url" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/galaxy.html" />
+<meta property="og:image" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/og-image.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vijaya Y — A Stellar Atlas" />
+<meta name="twitter:description" content="Every project charted as a celestial object in a personal star atlas." />
+<meta name="twitter:image" content="https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/og-image.png" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -226,17 +238,43 @@ a{ color:inherit; text-decoration:none; }
 .nova .verse-sub{ margin-top:1.8rem; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.22em; text-transform:uppercase; opacity:0; color:var(--dim); }
 
 /* ============================================================
-   THE ATLAS (horizontal object gallery)
+   THE ATLAS (constellation-map object list)
    ============================================================ */
 .atlas{ position:relative; z-index:5; }
 .atlas .head{ padding:var(--sp) var(--gut) 3rem; max-width:var(--maxw); margin-inline:auto; }
 .atlas .head h2{ font-size:clamp(2.4rem,6.5vw,5.4rem); margin-top:1.4rem; }
 .atlas .head p{ margin-top:1.4rem; max-width:52ch; color:var(--dim); }
 
-.gallery{ position:relative; }
-.gallery-track{ display:flex; gap:36px; padding:10px var(--gut) var(--sp); will-change:transform; }
+.constellation{ position:relative; max-width:900px; margin:0 auto; padding:10px var(--gut) var(--sp); }
+.const-line{
+  position:absolute; left:calc(var(--gut) + 21px); top:6px; bottom:70px; width:1px;
+  background:linear-gradient(180deg, rgba(85,214,230,.55), rgba(156,124,255,.4) 35%, rgba(240,92,156,.35) 65%, rgba(243,196,107,.3));
+}
+.const-item{ position:relative; padding-left:70px; margin-bottom:8vh; }
+.const-item:last-child{ margin-bottom:0; }
+.const-item:nth-child(even){ margin-left:clamp(0px, 6vw, 56px); }
+.const-item .object{ max-width:560px; }
+.const-node{ position:absolute; left:8px; top:40px; width:16px; height:16px; z-index:2; }
+.const-node .halo{ position:absolute; inset:-9px; border-radius:50%; filter:blur(3px); animation:const-twinkle 3.6s ease-in-out infinite; }
+.const-node .core{ position:absolute; inset:5px; border-radius:50%; background:#EBEDFA; }
+.const-node.c-cyan .halo{ background:#55D6E6; } .const-node.c-cyan .core{ box-shadow:0 0 10px #55D6E6; }
+.const-node.c-violet .halo{ background:#9C7CFF; } .const-node.c-violet .core{ box-shadow:0 0 10px #9C7CFF; }
+.const-node.c-pink .halo{ background:#F05C9C; } .const-node.c-pink .core{ box-shadow:0 0 10px #F05C9C; }
+.const-node.c-gold .halo{ background:#F3C46B; } .const-node.c-gold .core{ box-shadow:0 0 10px #F3C46B; }
+@keyframes const-twinkle{ 0%,100%{ opacity:.28; } 50%{ opacity:.62; } }
+
+@media (max-width:860px){
+  .const-line{ left:calc(var(--gut) + 7px); }
+  .const-item{ padding-left:44px; margin-bottom:6vh; }
+  .const-item:nth-child(even){ margin-left:0; }
+  .const-node{ left:0; top:32px; width:13px; height:13px; }
+  .object{ flex:1 1 auto; width:100%; min-height:auto; }
+}
+@media (prefers-reduced-motion:reduce){
+  .const-node .halo{ animation:none; opacity:.4; }
+}
 .object{
-  position:relative; flex:0 0 clamp(300px, 42vw, 500px);
+  position:relative;
   background:linear-gradient(180deg, rgba(19,26,68,.9), rgba(12,17,48,.9));
   border:1px solid rgba(156,124,255,.22);
   border-radius:14px; padding:34px 34px 30px;
@@ -262,7 +300,6 @@ a{ color:inherit; text-decoration:none; }
 .obj-link:hover .arw{ transform:translateX(4px); }
 
 @media (max-width:860px){
-  .gallery-track{ flex-direction:column; align-items:stretch; gap:24px; }
   .object{ flex:1 1 auto; width:100%; min-height:auto; }
 }
 
@@ -277,7 +314,7 @@ a{ color:inherit; text-decoration:none; }
 .minor .cell p{ color:var(--dim); font-size:.9rem; line-height:1.5; }
 
 /* ============================================================
-   REGISTERED PHENOMENA (patents)
+   DEEP FIELD SURVEY (promoted minor bodies)
    ============================================================ */
 .patents{ position:relative; z-index:5; }
 .patents h2{ font-size:clamp(2.2rem,6vw,4.6rem); max-width:18ch; }
@@ -382,7 +419,7 @@ a{ color:inherit; text-decoration:none; }
 <!-- =============================== CHROME =============================== -->
 <div class="chrome" id="chrome">
   <div class="top">
-    <a href="index.html" class="back-btn">← Back</a>
+    <a href="roads.html" class="back-btn">← Back</a>
     <a class="brand" href="#top"><b>Vijaya Y</b> · atlas</a>
     <nav class="top-links" aria-label="quick links">
       <a href="https://github.com/VijayaY836" data-link target="_blank" rel="noopener">GitHub</a>
@@ -486,26 +523,16 @@ a{ color:inherit; text-decoration:none; }
   <div class="head">
     <p class="eyebrow rise" data-reveal>Field 02 — the atlas</p>
     <h2 class="display rise" data-reveal>Charted objects.</h2>
-    <p class="rise" data-reveal>Seven principal bodies from the log. Each one shipped, each a different sky — from multi-agent systems to a language kindled from first light.</p>
+    <p class="rise" data-reveal>Seven principal bodies from the log, plus two more pulled in for a closer look. Each one shipped, each a different sky — from multi-agent systems to a language kindled from first light.</p>
   </div>
 
-  <div class="gallery" id="gallery">
-    <div class="gallery-track" id="track">
+  <div class="constellation">
+    <div class="const-line" aria-hidden="true"></div>
 
+    <div class="const-item" data-reveal>
+      <span class="const-node c-violet" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
       <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 001 · 2025</span><span class="obj-tag">full-stack · live</span></div>
-        <div class="obj-illu">
-          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><circle cx="50" cy="50" r="12" fill="#F3C46B" stroke="none"/><ellipse cx="50" cy="50" rx="34" ry="34"/><circle cx="84" cy="50" r="5" fill="#9C7CFF" stroke="none"/><ellipse cx="50" cy="50" rx="22" ry="22" stroke="#9C7CFF" stroke-dasharray="3 4"/></g></svg>
-        </div>
-        <div class="obj-coord">RA 18h 36m · DEC +38° 47′</div>
-        <div class="obj-desig">The Focus System</div>
-        <h3 class="obj-name">StudyBase</h3>
-        <p class="obj-desc">A full student-productivity platform — React + Flask + Supabase auth &amp; Postgres, with an AI Focus Advisor as its centerpiece. Deployed and live; the hackathon flagship.</p>
-        <div class="obj-foot"><span class="chip">React</span><span class="chip">Flask</span><span class="chip">Supabase</span><a class="obj-link" href="https://study-base-nine.vercel.app" target="_blank" rel="noopener" data-link>Visit <span class="arw">→</span></a></div>
-      </article>
-
-      <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 002 · 2025</span><span class="obj-tag">RAG · AI</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 001 · 2025</span><span class="obj-tag">RAG · AI</span></div>
         <div class="obj-illu">
           <svg viewBox="0 0 100 100"><g fill="none" stroke="#9C7CFF" stroke-width="2"><circle cx="44" cy="44" r="20"/><path d="M58 58l16 16" stroke="#F05C9C"/><path d="M44 34v20M34 44h20" stroke="#55D6E6"/><circle cx="44" cy="44" r="3" fill="#FFF6E2" stroke="none"/></g></svg>
         </div>
@@ -515,9 +542,12 @@ a{ color:inherit; text-decoration:none; }
         <p class="obj-desc">Ask your documents anything. A single-service RAG engine — FastAPI, fastembed, ChromaDB — under an aurora-lit interface, architected as one origin to sidestep CORS entirely.</p>
         <div class="obj-foot"><span class="chip">FastAPI</span><span class="chip">ChromaDB</span><span class="chip">RAG</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
       </article>
+    </div>
 
+    <div class="const-item" data-reveal>
+      <span class="const-node c-gold" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
       <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 003 · 2025</span><span class="obj-tag">agent</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 002 · 2025</span><span class="obj-tag">agent</span></div>
         <div class="obj-illu">
           <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><path d="M22 78c20-6 34-20 44-44" stroke-dasharray="2 5"/><circle cx="70" cy="30" r="9" fill="#F05C9C" stroke="none"/><path d="M70 30l18-14M70 30l14 18M70 30l20 4" stroke="#55D6E6"/></g></svg>
         </div>
@@ -527,9 +557,12 @@ a{ color:inherit; text-decoration:none; }
         <p class="obj-desc">A browser-automation agent that narrates its own journey. FastAPI + Playwright driving a live WebSocket dashboard, containerized onto Render from Playwright's own image.</p>
         <div class="obj-foot"><span class="chip">Playwright</span><span class="chip">WebSocket</span><span class="chip">Docker</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
       </article>
+    </div>
 
+    <div class="const-item" data-reveal>
+      <span class="const-node c-cyan" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
       <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 004 · 2025</span><span class="obj-tag">multi-agent</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 003 · 2025</span><span class="obj-tag">multi-agent</span></div>
         <div class="obj-illu">
           <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><path d="M50 26 30 60M50 26 70 60M30 60 40 82M70 60 60 82" stroke="#9C7CFF"/><circle cx="50" cy="26" r="6" fill="#F05C9C" stroke="none"/><circle cx="30" cy="60" r="5" fill="#55D6E6" stroke="none"/><circle cx="70" cy="60" r="5" fill="#55D6E6" stroke="none"/><circle cx="40" cy="82" r="5" fill="#F3C46B" stroke="none"/><circle cx="60" cy="82" r="5" fill="#F3C46B" stroke="none"/></g></svg>
         </div>
@@ -539,9 +572,12 @@ a{ color:inherit; text-decoration:none; }
         <p class="obj-desc">A five-agent LangGraph recruitment crew with a human-in-the-loop gate and built-in fairness checks. Pydantic-validated, Streamlit-faced, Claude-powered via OpenRouter.</p>
         <div class="obj-foot"><span class="chip">LangGraph</span><span class="chip">Pydantic</span><span class="chip">Streamlit</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
       </article>
+    </div>
 
+    <div class="const-item" data-reveal>
+      <span class="const-node c-pink" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
       <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 005 · 2025</span><span class="obj-tag">from scratch</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 004 · 2025</span><span class="obj-tag">from scratch</span></div>
         <div class="obj-illu">
           <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><path d="M50 18v64M18 50h64M28 28l44 44M72 28 28 72"/><circle cx="50" cy="50" r="8" fill="#FFF6E2" stroke="none"/><circle cx="50" cy="50" r="16" stroke="#F05C9C"/></g></svg>
         </div>
@@ -551,9 +587,12 @@ a{ color:inherit; text-decoration:none; }
         <p class="obj-desc">A programming language kindled from nothing in Python — lexer, parser, AST, and a tree-walking evaluator with arrays, functions, and full control flow. Origins all the way down.</p>
         <div class="obj-foot"><span class="chip">Python</span><span class="chip">Interpreter</span><span class="chip">AST</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
       </article>
+    </div>
 
+    <div class="const-item" data-reveal>
+      <span class="const-node c-violet" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
       <article class="object">
-        <div class="obj-top"><span class="obj-no">OBJ. 006 · 2025</span><span class="obj-tag">client-side</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 005 · 2025</span><span class="obj-tag">client-side</span></div>
         <div class="obj-illu">
           <svg viewBox="0 0 100 100"><g fill="none" stroke="#9C7CFF" stroke-width="2"><circle cx="38" cy="50" r="12" fill="#F05C9C" stroke="none"/><circle cx="66" cy="50" r="12" fill="#55D6E6" stroke="none" opacity=".85"/><ellipse cx="52" cy="50" rx="30" ry="14"/><path d="M52 36v28" stroke-dasharray="2 4"/></g></svg>
         </div>
@@ -563,55 +602,71 @@ a{ color:inherit; text-decoration:none; }
         <p class="obj-desc">Duplicate-image detection that never leaves your browser. Perceptual pHash paired with an FNV-1a byte signature, presented in a poised fixed-viewport dashboard.</p>
         <div class="obj-foot"><span class="chip">pHash</span><span class="chip">Canvas</span><span class="chip">Offline</span><a class="obj-link" href="#" data-link>View <span class="arw">→</span></a></div>
       </article>
-
     </div>
+
+    <div class="const-item" data-reveal>
+      <span class="const-node c-pink" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 006 · 2025</span><span class="obj-tag">AI × cryptography</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F05C9C" stroke-width="2"><rect x="30" y="42" width="40" height="30" rx="4"/><path d="M38 42V30a12 12 0 0 1 24 0v12" stroke="#55D6E6"/><circle cx="50" cy="56" r="4" fill="#FFF6E2" stroke="none"/><path d="M50 60v8" stroke="#FFF6E2"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 09h 14m · DEC +51° 02′</div>
+        <div class="obj-desig">The Sealed Signal</div>
+        <h3 class="obj-name">Emotion-Cipher</h3>
+        <p class="obj-desc">Messages that know how they feel — and keep it secret. DistilRoBERTa reads the emotion, AES-256-CBC seals the envelope, with PBKDF2-HMAC-SHA256 key derivation and zero-storage processing end to end.</p>
+        <div class="obj-foot"><span class="chip">FastAPI</span><span class="chip">Next.js</span><span class="chip">HuggingFace</span><span class="chip">AES-256</span><a class="obj-link" href="https://github.com/VijayaY836/Emotion-Cipher" target="_blank" rel="noopener" data-link>View <span class="arw">→</span></a></div>
+      </article>
+    </div>
+
+    <div class="const-item" data-reveal>
+      <span class="const-node c-gold" aria-hidden="true"><span class="halo"></span><span class="core"></span></span>
+      <article class="object">
+        <div class="obj-top"><span class="obj-no">OBJ. 007 · 2025</span><span class="obj-tag">civilization · AI</span></div>
+        <div class="obj-illu">
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><circle cx="50" cy="50" r="30"/><path d="M50 20v60M20 50h60" stroke-dasharray="1 5"/><circle cx="50" cy="26" r="4" fill="#55D6E6" stroke="none"/><circle cx="74" cy="50" r="4" fill="#F05C9C" stroke="none"/><circle cx="50" cy="74" r="4" fill="#9C7CFF" stroke="none"/><circle cx="26" cy="50" r="4" fill="#FFF6E2" stroke="none"/></g></svg>
+        </div>
+        <div class="obj-coord">RA 25h 08m · DEC +26° 45′</div>
+        <div class="obj-desig">The Eight-World Cluster</div>
+        <h3 class="obj-name">Cultura</h3>
+        <p class="obj-desc">A living map of Northeast India's eight states — traditions, languages, and festivals charted on interactive maps, an AI storytelling companion ("Moushumi Aaita") recommending folktales by sentiment, BHASHINI-powered translation, and a full handloom marketplace behind it all.</p>
+        <div class="obj-foot"><span class="chip">React</span><span class="chip">Leaflet</span><span class="chip">BHASHINI API</span><span class="chip">AI</span><a class="obj-link" href="https://github.com/VijayaY836/Cultura-AI" target="_blank" rel="noopener" data-link>View <span class="arw">→</span></a></div>
+      </article>
+    </div>
+
   </div>
 </section>
 
-<!-- minor bodies -->
-<section class="band minor">
-  <div class="wrap">
-    <p class="eyebrow rise" data-reveal>The outer belt — minor bodies</p>
-    <div class="grid" style="margin-top:2.4rem">
-      <div class="cell" data-reveal><span class="n">007</span><h5>Inkwell</h5><p>Real-time collaborative whiteboard — Express + Socket.IO on Canvas 2D, multi-tool, deployed to Render.</p></div>
-      <div class="cell" data-reveal><span class="n">008</span><h5>CVD Simulator</h5><p>Color-vision-deficiency simulator using literature-accurate Machado 2009 matrices and a linearized sRGB pipeline.</p></div>
-      <div class="cell" data-reveal><span class="n">009</span><h5>Secret Scanner</h5><p>A CLI credential scanner — 30+ regex signatures, Shannon-entropy fallback, pre-commit hook and CI.</p></div>
-      <div class="cell" data-reveal><span class="n">010</span><h5>Trajectory</h5><p>A GPA/CGPA calculator built to institutional grading regulation, with an SVG ribbon chart.</p></div>
-      <div class="cell" data-reveal><span class="n">011</span><h5>Cardsmith</h5><p>Single-file business-card generator, four templates, html2canvas + jsPDF export, inline SVG icons.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- =============================== REGISTERED PHENOMENA (patents) =============================== -->
+<!-- =============================== DEEP FIELD (promoted minor bodies) =============================== -->
 <section class="band patents" id="patents">
   <div class="wrap">
-    <p class="eyebrow rise" data-reveal>Field 02.5 — registered phenomena</p>
-    <h2 class="display rise" data-reveal>Patented discoveries.</h2>
-    <p class="lede rise" data-reveal>Two filings from outside the codebase — where research turns into a claimed, catalogued phenomenon of its own.</p>
+    <p class="eyebrow rise" data-reveal>Field 02.5 — deep field survey</p>
+    <h2 class="display rise" data-reveal>Deeper signals.</h2>
+    <p class="lede rise" data-reveal>Two more objects, smaller in scope but technically as deep as anything charted above.</p>
 
     <div class="patent-grid">
       <article class="object patent-card" data-reveal>
-        <div class="obj-top"><span class="obj-no">APPL. 202541055673 A</span><span class="obj-tag">materials science</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 008 · 2025</span><span class="obj-tag">color science</span></div>
         <div class="obj-illu">
-          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F3C46B" stroke-width="2"><circle cx="50" cy="50" r="8" fill="#F05C9C" stroke="none"/><circle cx="50" cy="22" r="4" fill="#EBEDFA" stroke="none"/><circle cx="74" cy="64" r="4" fill="#55D6E6" stroke="none"/><circle cx="26" cy="64" r="4" fill="#9C7CFF" stroke="none"/><path d="M50 50 50 22M50 50 74 64M50 50 26 64"/><ellipse cx="50" cy="50" rx="34" ry="34" stroke-dasharray="2 5" stroke="#9C7CFF"/></g></svg>
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#F05C9C" stroke-width="2"><circle cx="50" cy="50" r="26"/><path d="M50 24a26 26 0 0 1 22 13" stroke="#55D6E6"/><path d="M72 63a26 26 0 0 1-44 0" stroke="#9C7CFF"/><path d="M28 63a26 26 0 0 1 0-26" stroke="#F3C46B"/></g></svg>
         </div>
-        <div class="obj-coord">Filed · Provisional Patent Application, India</div>
-        <div class="obj-desig">The Ferrite Cluster</div>
-        <h3 class="obj-name">Ultrasonication-Assisted Synthesis of Soft Magnetic NiFe₂O₄ Nanoparticles and Related Methods</h3>
-        <p class="obj-desc">A materials-science innovation synthesizing NiFe₂O₄ nanomaterials via sol-gel, co-precipitation, and ultrasonication-assisted co-precipitation. The ultrasonication route improves particle dispersion, reduces crystallite size, and yields soft magnetic properties suited to biomedical and high-frequency electronics.</p>
-        <div class="obj-foot"><span class="chip">Nanomaterials</span><span class="chip">Magnetism</span><span class="chip">Sol-Gel</span><span class="patent-status">IN 202541055673 A</span></div>
+        <div class="obj-coord">RA 15h 52m · DEC +05° 18′</div>
+        <div class="obj-desig">The Spectrum Shift</div>
+        <h3 class="obj-name">CVD Simulator</h3>
+        <p class="obj-desc">A color-vision-deficiency simulator built on literature-accurate Machado et al. (2009) transformation matrices, run through a properly linearized sRGB pipeline instead of a naive filter approximation.</p>
+        <div class="obj-foot"><span class="chip">Machado 2009</span><span class="chip">sRGB</span><span class="chip">Canvas</span></div>
       </article>
 
       <article class="object patent-card" data-reveal>
-        <div class="obj-top"><span class="obj-no">APPL. 202541056107 A</span><span class="obj-tag">wearable health tech</span></div>
+        <div class="obj-top"><span class="obj-no">OBJ. 009 · 2025</span><span class="obj-tag">security tooling</span></div>
         <div class="obj-illu">
-          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><rect x="34" y="22" width="32" height="56" rx="10"/><path d="M40 50h6l4-12 6 24 5-12h9" stroke="#F05C9C"/><circle cx="50" cy="14" r="3" fill="#F3C46B" stroke="none"/><circle cx="50" cy="86" r="3" fill="#9C7CFF" stroke="none"/></g></svg>
+          <svg viewBox="0 0 100 100"><g fill="none" stroke="#55D6E6" stroke-width="2"><circle cx="42" cy="42" r="18"/><path d="M55 55l16 16" stroke="#F05C9C"/><path d="M34 42h16M42 34v16" stroke="#F3C46B"/></g></svg>
         </div>
-        <div class="obj-coord">Filed · Provisional Patent Application, India</div>
-        <div class="obj-desig">The Posture Signal</div>
-        <h3 class="obj-name">Smartwatch-Based Adaptive Posture Monitoring and Feedback System with User-Specific Identification</h3>
-        <p class="obj-desc">A fully offline, smartwatch-based system that infers posture in real time from onboard motion sensors and an embedded ML model, delivering adaptive haptic or audio feedback. Includes behavioral-biometric user identification and personalized incremental learning tuned to individual biomechanics.</p>
-        <div class="obj-foot"><span class="chip">Wearables</span><span class="chip">Embedded ML</span><span class="chip">Biometrics</span><span class="patent-status">IN 202541056107 A</span></div>
+        <div class="obj-coord">RA 04h 29m · DEC −41° 12′</div>
+        <div class="obj-desig">The Cipher Watch</div>
+        <h3 class="obj-name">Secret Scanner</h3>
+        <p class="obj-desc">A CLI credential scanner that catches what regex misses too — 30+ signature patterns for known secret formats, a Shannon-entropy fallback for anything unrecognized, wired into a pre-commit hook and GitHub Actions CI.</p>
+        <div class="obj-foot"><span class="chip">Python</span><span class="chip">Shannon Entropy</span><span class="chip">CI/CD</span></div>
       </article>
     </div>
   </div>
@@ -881,30 +936,8 @@ a{ color:inherit; text-decoration:none; }
       .to("#verseSub", { opacity:1, duration:.5 }, 1.2);
   }
 
-  /* ---------- horizontal atlas ---------- */
-  function atlas(){
-    if (!hasGSAP || !window.ScrollTrigger) return;
-    var mm = gsap.matchMedia();
-    mm.add("(min-width: 861px)", function(){
-      var track = document.getElementById("track");
-      var gallery = document.getElementById("gallery");
-      var tween = gsap.to(track, {
-        x: function(){ return -(track.scrollWidth - gallery.offsetWidth); },
-        ease:"none",
-        scrollTrigger:{ trigger:gallery, start:"top top",
-          end:function(){ return "+=" + (track.scrollWidth - gallery.offsetWidth + window.innerHeight*0.2); },
-          pin:true, scrub:1, invalidateOnRefresh:true, anticipatePin:1 }
-      });
-      gsap.utils.toArray(".object").forEach(function(card){
-        gsap.from(card, { y:44, opacity:0, duration:.6, ease:"power2.out", scrollTrigger:{ trigger:card, containerAnimation:tween, start:"left 92%" }});
-      });
-    });
-    mm.add("(max-width: 860px)", function(){
-      gsap.utils.toArray(".object").forEach(function(card){
-        gsap.from(card, { y:36, opacity:0, duration:.8, ease:"power3.out", scrollTrigger:{ trigger:card, start:"top 88%" }});
-      });
-    });
-  }
+  /* ---------- atlas (now handled by the generic reveals() pass) ---------- */
+  function atlas(){}
 
   /* ---------- stardust starfield ---------- */
   function stardust(){
