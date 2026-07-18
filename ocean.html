@@ -289,6 +289,13 @@ h2.zone-title::after{
 .c-link.primary:hover{box-shadow:0 0 40px rgba(255,200,122,.45)}
 .hadal-foot{margin-top:9svh;text-align:center;font-family:var(--font-mono);font-size:9.5px;
   letter-spacing:.26em;text-transform:uppercase;color:rgba(234,246,248,.22);line-height:2.2}
+.chest-wrap{display:flex;justify-content:center;margin-bottom:6px}
+.chest-icon{animation:chestGlow 3.6s ease-in-out infinite;max-width:100%;height:auto;object-fit:contain}
+@keyframes chestGlow{
+  0%,100%{filter:drop-shadow(0 0 10px rgba(255,200,122,.30)) drop-shadow(0 0 26px rgba(255,200,122,.14))}
+  50%{filter:drop-shadow(0 0 18px rgba(255,200,122,.55)) drop-shadow(0 0 44px rgba(255,200,122,.24))}
+}
+@media (prefers-reduced-motion:reduce){ .chest-icon{animation:none} }
 .resurface{display:inline-block;margin-top:16px;color:var(--ink-faint);text-decoration:none;
   border:1px solid rgba(234,246,248,.14);border-radius:999px;padding:11px 18px;
   font-size:9.5px;letter-spacing:.3em;transition:color .4s,border-color .4s;cursor:pointer;
@@ -616,9 +623,9 @@ h2.zone-title::after{
   <section class="zone" id="abyssal" data-zone-name="ABYSSOPELAGIC">
     <div class="shell">
       <div class="zone-head reveal">
-        <p class="eyebrow"><span class="m">−1,400 M</span> · ABYSSOPELAGIC · NO LIGHT HAS EVER REACHED HERE</p>
-        <h2 class="zone-title">What the pressure<br><em>couldn't crush.</em></h2>
-        <p class="zone-sub">The deep record: where I've worked, what I've filed, what I've won. Everything below this line was earned under pressure.</p>
+        <p class="eyebrow"><span class="m">−1,400 M</span> · ABYSSOPELAGIC · WHERE THE RAREST THINGS SETTLE</p>
+        <h2 class="zone-title">What the deep<br><em>held onto.</em></h2>
+        <p class="zone-sub">The deep record: where I've worked, what I've filed, what I've won — the kind of things that only turn up if you're willing to dive far enough to go looking for them.</p>
       </div>
 
       <div class="record reveal">
@@ -652,7 +659,7 @@ h2.zone-title::after{
       </div>
 
       <div class="record reveal">
-        <span class="tag"><span class="dot"></span>Artifacts recovered — patents filed</span>
+        <span class="tag"><span class="dot"></span>Treasure recovered — patents filed</span>
         <div class="patents">
           <div class="card patent">
             <p class="depth-mark" style="margin-bottom:0">−3,100 M</p>
@@ -670,7 +677,7 @@ h2.zone-title::after{
       </div>
 
       <div class="record reveal">
-        <span class="tag"><span class="dot"></span>Podiums — 2024 → 2026</span>
+        <span class="tag"><span class="dot"></span>Treasure haul — podiums, 2024 → 2026</span>
         <div class="podiums">
           <div class="podium"><span class="place">2nd</span><div><h5>BuildSphere — Synergia 2026 web dev competition</h5><span>BVRIT Hyderabad · 04/2026 · ₹3,000</span></div></div>
           <div class="podium"><span class="place">1st</span><div><h5>Naveena 2k25 Idea Presentation — Innovation Day</h5><span>BVRIT Hyderabad · 10/2025</span></div></div>
@@ -687,11 +694,14 @@ h2.zone-title::after{
     <div class="shell">
       <div class="last-light">
         <div class="card reveal">
+          <div class="chest-wrap" aria-hidden="true">
+            <img class="chest-icon" src="assets/treasure.png" alt="" width="220" height="220" loading="lazy">
+          </div>
           <span class="tag"><span class="dot"></span>−10,935 M · Challenger Deep</span>
           <h2>The last light<br><em>is a hello.</em></h2>
-          <p>You've reached the bottom of the dive — full ocean depth, 1,088 atmospheres. Almost nothing survives down here except one thing: a message. Send one up.</p>
+          <p>You've reached the bottom of the dive — full ocean depth, the deepest point on Earth. This far down, there's one last thing worth surfacing: a message. Send one up.</p>
           <div class="contact-links">
-            <a class="c-link primary" href="mailto:vijayayeditha564@gmail.com">Send a signal</a>
+            <a class="c-link" href="https://mail.google.com/mail/?view=cm&fs=1&to=vijayayeditha8537@gmail.com" target="_blank" rel="noopener">Email</a>
             <a class="c-link" href="https://github.com/VijayaY836" target="_blank" rel="noopener">GitHub</a>
             <a class="c-link" href="https://www.linkedin.com/in/vijaya-bhaskara-lakshmi-yeditha-5bb0b9328/" target="_blank" rel="noopener">LinkedIn</a>
             <a class="c-link" href="Resume.pdf" download="Vijaya-Yeditha-Resume.pdf">Résumé</a>

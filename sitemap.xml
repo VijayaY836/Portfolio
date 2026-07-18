@@ -21,6 +21,11 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/ocean.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://portfolio-zeta-gilt-26xhf2sai6.vercel.app/formal.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
